@@ -51,11 +51,15 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
 
   let block: any;
 
+  if (retry <= 0) {
+    console.error("[ERROR] missing block", block_num);
+    process.exit();
+  }
+
   try {
     // get block info
     block = await rpc.get_block( block_num );
   } catch (e) {
-    console.error("error", block_num);
     return get_block_counts( block_num, retry - 1 );
   }
 
@@ -80,7 +84,7 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
        *
        * Hyperion is too slow & unreliable to fetch additional transactions
        */
-      // block_counts.actions += await get_hyperion_actions_count( trx );
+      block_counts.actions += await get_hyperion_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
@@ -88,13 +92,14 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
 }
 
 async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<number> {
-  if (retry > 0) {
-    try {
-      const transaction = await hyperion.get_transaction( trx );
-      return transaction.actions.length;
-    } catch (e) {
-      return get_hyperion_actions_count( trx, retry - 1 )
-    }
+  if (retry <= 0) {
+    console.error("[ERROR] missing trx in Hyperion", trx);
+    process.exit();
   }
-  return 0;
+  try {
+    const transaction = await hyperion.get_transaction( trx );
+    return transaction.actions.length;
+  } catch (e) {
+    return get_hyperion_actions_count( trx, retry - 1 )
+  }
 }
