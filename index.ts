@@ -1,5 +1,4 @@
-import { rpc, hyperion } from "./src/config";
-import pAll from 'p-all';
+import { rpc, hyperion, client } from "./src/config";
 import PQueue from 'p-queue';
 import moment from "moment";
 
@@ -19,6 +18,7 @@ interface Count {
 
   const after = moment.utc(moment.now()).unix();
   console.log(`time ${after - before}s`, hourly_counts);
+  process.exit();
 })();
 
 async function get_hourly_counts( block_num: number ) {
@@ -79,17 +79,26 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      /**
-       * TO-DO
-       *
-       * Hyperion is too slow & unreliable to fetch additional transactions
-       */
-      // block_counts.actions += await get_hyperion_actions_count( trx );
+      block_counts.actions += await get_dfuse_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
   return block_counts;
 }
+
+async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
+  if (retry <= 0) {
+    console.error("[ERROR] missing trx in Hyperion", trx);
+    process.exit();
+  }
+  try {
+    const {transaction} = await client.fetchTransaction( trx );
+    return transaction.actions.length;
+  } catch (e) {
+    return get_dfuse_actions_count( trx, retry - 1 )
+  }
+}
+
 
 async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
