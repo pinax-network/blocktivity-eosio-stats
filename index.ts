@@ -1,23 +1,29 @@
 import { rpc, hyperion } from "./src/config";
+import moment from "moment";
 
 (async () => {
+  const before = moment.utc(moment.now()).unix();
+
   // get latest block number
   const { last_irreversible_block_num } = await rpc.get_info();
   const hourly_counts = await get_hourly_counts( last_irreversible_block_num );
 
-  console.log({last_irreversible_block_num, hourly_counts});
+  const after = moment.utc(moment.now()).unix();
+  console.log({time: `${after - before}s`, hourly_counts});
 })();
 
 async function get_hourly_counts( block_num: number ) {
-  // minus 1 hour & round down to the nearest 1 hour interval (7200 blocks)
-  const first_hour_block = (block_num - 7200) - block_num % 7200;
+  const ONE_HOUR = 60 * 2; // 1 minutes
+
+  // minus 1 hour & round down to the nearest 1 hour interval
+  const first_hour_block = (block_num - ONE_HOUR) - block_num % ONE_HOUR;
 
   const hourly_counts = {
     actions: 0,
     transactions: 0,
   }
 
-  for (let i = first_hour_block; i < first_hour_block + 7200; i++) {
+  for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
     const block_counts = await get_block_counts( i );
     hourly_counts.actions += block_counts.actions;
     hourly_counts.transactions += block_counts.transactions;
@@ -27,6 +33,7 @@ async function get_hourly_counts( block_num: number ) {
 }
 
 async function get_block_counts( block_num: number ) {
+
   // get block info
   const block: any = await rpc.get_block( block_num );
 
