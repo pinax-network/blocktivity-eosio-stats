@@ -9,7 +9,7 @@ import moment from "moment";
   const hourly_counts = await get_hourly_counts( last_irreversible_block_num );
 
   const after = moment.utc(moment.now()).unix();
-  console.log({time: `${after - before}s`, hourly_counts});
+  console.log(`time ${after - before}s`, hourly_counts);
 })();
 
 async function get_hourly_counts( block_num: number ) {
@@ -28,7 +28,7 @@ async function get_hourly_counts( block_num: number ) {
     hourly_counts.actions += block_counts.actions;
     hourly_counts.transactions += block_counts.transactions;
   }
-  console.log({block_num, hourly_counts});
+  console.log(block_num, hourly_counts);
   return hourly_counts;
 }
 
@@ -53,10 +53,10 @@ async function get_block_counts( block_num: number ) {
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      const transaction = await hyperion.get_transaction( trx );
-      block_counts.actions += transaction.actions.length;
+      // const transaction = await hyperion.get_transaction( trx );
+      // block_counts.actions += transaction.actions.length;
     }
   }
-  console.log({block_num, block_counts});
+  console.log(block_num, block_counts);
   return block_counts;
 }
