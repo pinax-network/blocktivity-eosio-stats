@@ -9,3 +9,8 @@ export interface Action {
   authorization: Authorization[]
   data: any
 }
+
+export interface Count {
+  actions: number;
+  transactions: number;
+}

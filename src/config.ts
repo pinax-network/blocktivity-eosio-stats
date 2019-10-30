@@ -14,6 +14,9 @@ dotenv.config();
 const fetch = require('node-fetch');
 
 if (!process.env.DFUSE_TOKEN) throw new Error("[DFUSE_TOKEN] is required");
+if (!process.env.PRIVATE_KEY) throw new Error("[PRIVATE_KEY] is required");
+if (process.env.PRIVATE_KEY.includes("PRIVATE")) throw new Error("[PRIVATE_KEY] invalid key")
+if (process.env.DFUSE_TOKEN.includes("PRIVATE")) throw new Error("[DFUSE_TOKEN] invalid token")
 
 export const endpoint = process.env.NODEOS_ENDPOINT || 'http://api.eosn.io';
 export const contract = process.env.CONTRACT || 'blocktivity1';
@@ -21,12 +24,14 @@ export const actor = process.env.ACTOR || 'eosnationftw';
 export const permission = process.env.PERMISSION || 'push';
 export const apiKey = process.env.DFUSE_TOKEN;
 
-// export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY || '']);
+export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY]);
 export const rpc = new JsonRpc(endpoint, { fetch });
 export const hyperion = new HyperionRpc(endpoint, { fetch })
-// export const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+export const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 export const client = createDfuseClient({ apiKey, network: "mainnet" })
 export const authorization: Authorization[] = [{
   actor,
   permission,
 }];
+
+export const ONE_HOUR = 60 * 60 * 2; // 1 hour

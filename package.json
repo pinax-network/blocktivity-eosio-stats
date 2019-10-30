@@ -17,6 +17,7 @@
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "p-queue": "^6.2.0",
+    "write-json-file": "^4.2.0",
     "ws": "^7.2.0"
   },
   "devDependencies": {

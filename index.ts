@@ -1,32 +1,42 @@
-import { rpc, hyperion, client } from "./src/config";
+import * as path from "path";
+import * as fs from "fs";
+import { rpc, hyperion, client, ONE_HOUR } from "./src/config";
+import { timeout } from "./src/utils";
+import { Count } from "./src/interfaces";
+import * as write from "write-json-file";
 import PQueue from 'p-queue';
 import moment from "moment";
 
-interface Count {
-  actions: number;
-  transactions: number;
+async function main() {
+  const block_num = await get_last_hour_block();
+
+  if ( !exists(block_num) ) {
+    const hourly_counts = await get_hourly_counts( block_num ); // fetch hourly count data
+    save( block_num, hourly_counts ); // save locally as JSON
+  } else {
+    console.log(block_num, 'already exists');
+  }
+  await timeout(60000); // 1 minute pause
+  main();
+}
+main();
+
+function exists( block_num: number ) {
+  return fs.existsSync(path.join(__dirname, "tmp", block_num + ".json"));
 }
 
-(async () => {
-  const before = moment.utc(moment.now()).unix();
+function save( block_num: number, json: any ) {
+  write.sync(path.join(__dirname, "tmp", block_num + ".json"), json);
+}
 
-  // get latest block number
-  // const { last_irreversible_block_num } = await rpc.get_info();
-
-  const last_irreversible_block_num = 87166536;
-  const hourly_counts = await get_hourly_counts( last_irreversible_block_num );
-
-  const after = moment.utc(moment.now()).unix();
-  console.log(`time ${after - before}s`, hourly_counts);
-  process.exit();
-})();
-
-async function get_hourly_counts( block_num: number ) {
-  const ONE_HOUR = 60 * 60 * 2; // 60 seconds
+async function get_last_hour_block() {
+  const { last_irreversible_block_num } = await rpc.get_info();
 
   // minus 1 hour & round down to the nearest 1 hour interval
-  const first_hour_block = (block_num - ONE_HOUR) - block_num % ONE_HOUR;
+  return (last_irreversible_block_num - ONE_HOUR) - last_irreversible_block_num % ONE_HOUR;
+}
 
+async function get_hourly_counts( block_num: number ) {
   const hourly_counts: Count = {
     actions: 0,
     transactions: 0,
@@ -34,7 +44,7 @@ async function get_hourly_counts( block_num: number ) {
   // queue up promises
   const queue = new PQueue({concurrency: 20});
 
-  for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
+  for (let i = block_num; i < block_num + ONE_HOUR; i++) {
     queue.add(async () => {
       const block_counts = await get_block_counts( i )
       hourly_counts.actions += block_counts.actions;
@@ -42,8 +52,10 @@ async function get_hourly_counts( block_num: number ) {
     });
   }
 
-  console.log(block_num, hourly_counts);
+  // wait until queue is finished
   await queue.onIdle();
+
+  console.log(block_num, hourly_counts);
   return hourly_counts;
 }
 
