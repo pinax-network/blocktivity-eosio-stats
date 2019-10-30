@@ -1,2 +1,2 @@
-# blocktivity-eos-stats
-Blocktivity EOS Stats
+# Blocktivity EOS Stats
+
