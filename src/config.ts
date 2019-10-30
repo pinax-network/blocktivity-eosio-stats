@@ -9,7 +9,7 @@ dotenv.config();
 
 const fetch = require('node-fetch');
 
-export const endpoint = process.env.NODEOS_ENDPOINT || 'https://api.eosn.io';
+export const endpoint = process.env.NODEOS_ENDPOINT || 'http://api.eosn.io';
 export const contract = process.env.CONTRACT || 'blocktivity1';
 export const actor = process.env.ACTOR || 'eosnationftw';
 export const permission = process.env.PERMISSION || 'push';
