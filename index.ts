@@ -84,7 +84,7 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
        *
        * Hyperion is too slow & unreliable to fetch additional transactions
        */
-      block_counts.actions += await get_hyperion_actions_count( trx );
+      // block_counts.actions += await get_hyperion_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
