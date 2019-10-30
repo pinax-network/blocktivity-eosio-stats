@@ -1,4 +1,5 @@
 import { rpc, hyperion } from "./src/config";
+import pAll from 'p-all';
 import PQueue from 'p-queue';
 import moment from "moment";
 
@@ -29,11 +30,19 @@ async function get_hourly_counts( block_num: number ) {
     transactions: 0,
   }
   // queue up promises
-  const queue = new PQueue({concurrency: 50});
+  const queue = new PQueue({concurrency: 5});
+
+  let count = 0;
+  queue.on('active', () => {
+    console.log(`Working on item #${++count}.  Size: ${queue.size}  Pending: ${queue.pending}`);
+  });
+
   for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
-    const block_counts = await queue.add(() => get_block_counts( i ));
-    hourly_counts.actions += block_counts.actions;
-    hourly_counts.transactions += block_counts.transactions;
+    queue.add(async () => {
+      const block_counts = await get_block_counts( i )
+      hourly_counts.actions += block_counts.actions;
+      hourly_counts.transactions += block_counts.transactions;
+    });
   }
 
   console.log(block_num, hourly_counts);
