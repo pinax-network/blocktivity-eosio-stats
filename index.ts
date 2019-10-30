@@ -29,7 +29,7 @@ async function get_hourly_counts( block_num: number ) {
     transactions: 0,
   }
   // queue up promises
-  const queue = new PQueue({concurrency: 10});
+  const queue = new PQueue({concurrency: 50});
   for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
     const block_counts = await queue.add(() => get_block_counts( i ));
     hourly_counts.actions += block_counts.actions;
