@@ -56,9 +56,8 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     block = await rpc.get_block( block_num );
   } catch (e) {
     console.error("error", block_num);
-    return get_block_counts( block_num, retry );
+    return get_block_counts( block_num, retry - 1 );
   }
-  if (block == undefined) return get_block_counts( block_num, retry );
 
   // store statistic counters
   const block_counts = {
@@ -76,7 +75,12 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      block_counts.actions += await get_hyperion_actions_count( trx );
+      /**
+       * TO-DO
+       *
+       * Hyperion is too slow & unreliable to fetch additional transactions
+       */
+      // block_counts.actions += await get_hyperion_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
@@ -89,7 +93,7 @@ async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<num
       const transaction = await hyperion.get_transaction( trx );
       return transaction.actions.length;
     } catch (e) {
-      return get_hyperion_actions_count( trx, retry )
+      return get_hyperion_actions_count( trx, retry - 1 )
     }
   }
   return 0;
