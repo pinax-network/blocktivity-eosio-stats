@@ -1,5 +1,11 @@
 import { rpc, hyperion } from "./src/config";
+import PQueue from 'p-queue';
 import moment from "moment";
+
+interface Count {
+  actions: number;
+  transactions: number;
+}
 
 (async () => {
   const before = moment.utc(moment.now()).unix();
@@ -18,16 +24,18 @@ async function get_hourly_counts( block_num: number ) {
   // minus 1 hour & round down to the nearest 1 hour interval
   const first_hour_block = (block_num - ONE_HOUR) - block_num % ONE_HOUR;
 
-  const hourly_counts = {
+  const hourly_counts: Count = {
     actions: 0,
     transactions: 0,
   }
-
+  // queue up promises
+  const queue = new PQueue({concurrency: 10});
   for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
-    const block_counts = await get_block_counts( i );
+    const block_counts = await queue.add(() => get_block_counts( i ));
     hourly_counts.actions += block_counts.actions;
     hourly_counts.transactions += block_counts.transactions;
   }
+
   console.log(block_num, hourly_counts);
   return hourly_counts;
 }
@@ -53,8 +61,8 @@ async function get_block_counts( block_num: number ) {
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      // const transaction = await hyperion.get_transaction( trx );
-      // block_counts.actions += transaction.actions.length;
+      const transaction = await hyperion.get_transaction( trx );
+      block_counts.actions += transaction.actions.length;
     }
   }
   console.log(block_num, block_counts);
