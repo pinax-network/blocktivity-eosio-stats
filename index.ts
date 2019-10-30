@@ -12,7 +12,9 @@ interface Count {
   const before = moment.utc(moment.now()).unix();
 
   // get latest block number
-  const { last_irreversible_block_num } = await rpc.get_info();
+  // const { last_irreversible_block_num } = await rpc.get_info();
+
+  const last_irreversible_block_num = 87166536;
   const hourly_counts = await get_hourly_counts( last_irreversible_block_num );
 
   const after = moment.utc(moment.now()).unix();
@@ -20,7 +22,7 @@ interface Count {
 })();
 
 async function get_hourly_counts( block_num: number ) {
-  const ONE_HOUR = 60 * 2; // 1 minutes
+  const ONE_HOUR = 60 * 60 * 2; // 60 seconds
 
   // minus 1 hour & round down to the nearest 1 hour interval
   const first_hour_block = (block_num - ONE_HOUR) - block_num % ONE_HOUR;
@@ -30,12 +32,7 @@ async function get_hourly_counts( block_num: number ) {
     transactions: 0,
   }
   // queue up promises
-  const queue = new PQueue({concurrency: 5});
-
-  let count = 0;
-  queue.on('active', () => {
-    console.log(`Working on item #${++count}.  Size: ${queue.size}  Pending: ${queue.pending}`);
-  });
+  const queue = new PQueue({concurrency: 20});
 
   for (let i = first_hour_block; i < first_hour_block + ONE_HOUR; i++) {
     queue.add(async () => {
@@ -46,13 +43,22 @@ async function get_hourly_counts( block_num: number ) {
   }
 
   console.log(block_num, hourly_counts);
+  await queue.onIdle();
   return hourly_counts;
 }
 
-async function get_block_counts( block_num: number ) {
+async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> {
 
-  // get block info
-  const block: any = await rpc.get_block( block_num );
+  let block: any;
+
+  try {
+    // get block info
+    block = await rpc.get_block( block_num );
+  } catch (e) {
+    console.error("error", block_num);
+    return get_block_counts( block_num, retry );
+  }
+  if (block == undefined) return get_block_counts( block_num, retry );
 
   // store statistic counters
   const block_counts = {
@@ -70,10 +76,21 @@ async function get_block_counts( block_num: number ) {
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      const transaction = await hyperion.get_transaction( trx );
-      block_counts.actions += transaction.actions.length;
+      block_counts.actions += await get_hyperion_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
   return block_counts;
+}
+
+async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<number> {
+  if (retry > 0) {
+    try {
+      const transaction = await hyperion.get_transaction( trx );
+      return transaction.actions.length;
+    } catch (e) {
+      return get_hyperion_actions_count( trx, retry )
+    }
+  }
+  return 0;
 }
