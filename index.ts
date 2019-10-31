@@ -122,8 +122,8 @@ async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
 
 async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
-    console.error("[ERROR] missing trx in Dfuse", trx);
-    process.exit();
+    console.error(JSON.stringify({error: "missing trx in v1 History", trx}));
+    return 0;
   }
   try {
     const {transaction} = await client.fetchTransaction( trx );
