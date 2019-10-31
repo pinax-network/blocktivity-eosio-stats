@@ -6,11 +6,13 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "build": "./scripts/build.sh"
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {
     "@dfuse/client": "^0.3.0",
+    "@eoscafe/hyperion": "^3.2.4",
     "dotenv": "^8.2.0",
     "eosjs": "^20.0.0",
     "moment": "^2.24.0",

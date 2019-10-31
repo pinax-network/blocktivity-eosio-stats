@@ -3,14 +3,15 @@ export interface Authorization {
   permission: string
 }
 
-export interface Action {
+export interface Action<T = any> {
   account: string
   name: string
   authorization: Authorization[]
-  data: any
+  data: T
 }
 
 export interface Count {
+  block_num: number;
   actions: number;
   transactions: number;
 }

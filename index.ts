@@ -1,11 +1,12 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, rpc_history, client, ONE_HOUR } from "./src/config";
-import { timeout } from "./src/utils";
+import { rpc, ONE_HOUR } from "./src/config";
+import { timeout, transact, push } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
 import PQueue from 'p-queue';
 import moment from "moment";
+import { get_transaction_count } from "./src/get_transaction";
 
 // global timer
 let before = moment.utc(moment.now()).unix();
@@ -15,12 +16,12 @@ async function main() {
 
   if ( !exists(block_num) ) {
     const hourly_counts = await get_hourly_counts( block_num ); // fetch hourly count data
-    save( block_num, hourly_counts ); // save locally as JSON
+    await save( block_num, hourly_counts ); // save locally as JSON
   } else {
     console.log(block_num, 'already exists');
   }
   await timeout(60000); // 1 minute pause
-  main();
+  await main();
 }
 main();
 
@@ -28,7 +29,20 @@ function exists( block_num: number ) {
   return fs.existsSync(path.join(__dirname, "tmp", block_num + ".json"));
 }
 
-function save( block_num: number, json: any ) {
+async function save( block_num: number, json: Count, retry = 3): Promise<void> {
+  if (retry <= 0) {
+    console.error(JSON.stringify({error: "failed to push on-chain", block_num, json}));
+    return;
+  }
+
+  // push on-chain
+  try {
+    await transact([ push(json) ])
+  } catch (e) {
+    return save( block_num, json, retry - 1);
+  }
+
+  // save locally
   write.sync(path.join(__dirname, "tmp", block_num + ".json"), json);
 }
 
@@ -42,6 +56,7 @@ async function get_last_hour_block() {
 async function get_hourly_counts( block_num: number ) {
   before = moment.utc(moment.now()).unix();
   const hourly_counts: Count = {
+    block_num,
     actions: 0,
     transactions: 0,
   }
@@ -56,7 +71,7 @@ async function get_hourly_counts( block_num: number ) {
 
       // logging
       const after = moment.utc(moment.now()).unix();
-      console.log(JSON.stringify({time: after - before, block_num, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
+      console.log(JSON.stringify({time: after - before, block_num: i, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
     });
   }
 
@@ -86,7 +101,8 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
   }
 
   // store statistic counters
-  const block_counts = {
+  const block_counts: Count = {
+    block_num,
     actions: 0,
     transactions: 0,
   }
@@ -101,34 +117,8 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      block_counts.actions += await get_dfuse_actions_count( trx );
+      block_counts.actions += await get_transaction_count( trx );
     }
   }
   return block_counts;
-}
-
-async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
-  if (retry <= 0) {
-    console.error(JSON.stringify({error: "missing trx in v1 History", trx}));
-    return 0;
-  }
-  try {
-    const { traces } = await rpc_history.history_get_transaction( trx );
-    return traces.length;
-  } catch (e) {
-    return get_v1_actions_count( trx, retry - 1 )
-  }
-}
-
-async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
-  if (retry <= 0) {
-    console.error(JSON.stringify({error: "missing trx in v1 History", trx}));
-    return 0;
-  }
-  try {
-    const {transaction} = await client.fetchTransaction( trx );
-    return transaction.actions.length;
-  } catch (e) {
-    return get_dfuse_actions_count( trx, retry - 1 )
-  }
 }
