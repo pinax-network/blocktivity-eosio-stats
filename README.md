@@ -1,7 +1,11 @@
-# Blocktivity EOS Stats
+# Blocktivity EOSIO Stats
 
-1. Calculate action & transaction server-side process
-2. Data publishing solution using EOSIO based smart contract
+1. Server-Side: Calculate action & transaction counts
+2. Smart Contract: Hourly/Daily/Weekly statistics
+
+## Chains
+
+- [EOS](https://bloks.io/account/blocktivity1)
 
 # 1. Server-Side
 
