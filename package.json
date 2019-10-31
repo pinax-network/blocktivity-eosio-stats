@@ -10,15 +10,12 @@
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {
-    "@dfuse/client": "^0.3.0",
-    "@eoscafe/hyperion": "^3.2.4",
     "dotenv": "^8.2.0",
     "eosjs": "^20.0.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "p-queue": "^6.2.0",
-    "write-json-file": "^4.2.0",
-    "ws": "^7.2.0"
+    "write-json-file": "^4.2.0"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

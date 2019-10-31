@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, rpc_history, hyperion, client, ONE_HOUR } from "./src/config";
+import { rpc, rpc_history, ONE_HOUR } from "./src/config";
 import { timeout } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
@@ -101,38 +101,12 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
 async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
     console.error("[ERROR] missing trx in v1 History", trx);
-    process.exit();
+    return 0;
   }
   try {
     const { traces } = await rpc_history.history_get_transaction( trx );
     return traces.length;
   } catch (e) {
-    return get_dfuse_actions_count( trx, retry - 1 )
-  }
-}
-
-async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
-  if (retry <= 0) {
-    console.error("[ERROR] missing trx in Dfuse", trx);
-    process.exit();
-  }
-  try {
-    const {transaction} = await client.fetchTransaction( trx );
-    return transaction.actions.length;
-  } catch (e) {
-    return get_dfuse_actions_count( trx, retry - 1 )
-  }
-}
-
-async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<number> {
-  if (retry <= 0) {
-    console.error("[ERROR] missing trx in Hyperion", trx);
-    process.exit();
-  }
-  try {
-    const transaction = await hyperion.get_transaction( trx );
-    return transaction.actions.length;
-  } catch (e) {
-    return get_hyperion_actions_count( trx, retry - 1 )
+    return get_v1_actions_count( trx, retry - 1 )
   }
 }

@@ -4,9 +4,10 @@ module.exports = {
       name: "blocktivity-eos-stats",
       script: 'index.ts',
       env: {
-        NODEOS_ENDPOINT: "https://api.eosn.io",
-        ACCOUNT_NAME: "blocktivity1",
-        PERMISSION: "ops",
+        NODEOS_ENDPOINT: "http://eos.eosn.io",
+        NODEOS_ENDPOINT_HISTORY: "http://eos.greymass.com",
+        ACTOR: "blocktivity1",
+        PERMISSION: "push",
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
