@@ -37,6 +37,7 @@ async function get_last_hour_block() {
 }
 
 async function get_hourly_counts( block_num: number ) {
+  const before = moment.utc(moment.now()).unix();
   const hourly_counts: Count = {
     actions: 0,
     transactions: 0,
@@ -54,8 +55,8 @@ async function get_hourly_counts( block_num: number ) {
 
   // wait until queue is finished
   await queue.onIdle();
-
-  console.log(block_num, hourly_counts);
+  const after = moment.utc(moment.now()).unix();
+  console.log(`time ${after - before}s`, hourly_counts);
   return hourly_counts;
 }
 
