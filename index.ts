@@ -7,6 +7,9 @@ import * as write from "write-json-file";
 import PQueue from 'p-queue';
 import moment from "moment";
 
+// global timer
+let before = moment.utc(moment.now()).unix();
+
 async function main() {
   const block_num = await get_last_hour_block();
 
@@ -37,7 +40,7 @@ async function get_last_hour_block() {
 }
 
 async function get_hourly_counts( block_num: number ) {
-  const before = moment.utc(moment.now()).unix();
+  before = moment.utc(moment.now()).unix();
   const hourly_counts: Count = {
     actions: 0,
     transactions: 0,
@@ -56,7 +59,7 @@ async function get_hourly_counts( block_num: number ) {
   // wait until queue is finished
   await queue.onIdle();
   const after = moment.utc(moment.now()).unix();
-  console.log(`time ${after - before}s`, hourly_counts);
+  console.log(JSON.stringify({time: after - before, block_num, hourly_counts}));
   return hourly_counts;
 }
 
@@ -95,13 +98,14 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
       block_counts.actions += await get_v1_actions_count( trx );
     }
   }
-  console.log(block_num, block_counts);
+  const after = moment.utc(moment.now()).unix();
+  console.log(JSON.stringify({time: after - before, block_num, block_counts}));
   return block_counts;
 }
 
 async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
-    console.error("[ERROR] missing trx in v1 History", trx);
+    console.error(JSON.stringify({error: "missing trx in v1 History", trx}));
     return 0;
   }
   try {
