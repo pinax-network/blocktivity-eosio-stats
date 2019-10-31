@@ -42,4 +42,5 @@ export const authorization: Authorization[] = [{
   permission,
 }];
 
-export const ONE_HOUR = process.env.ONE_HOUR || 60 * 60 * 2; // 1 hour
+export const ONE_HOUR = Number(process.env.ONE_HOUR || 60 * 60 * 2); // 1 hour
+export const PAUSE_MS = Number(process.env.PAUSE_MS || 60 * 1000); // 1 minute

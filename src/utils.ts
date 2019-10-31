@@ -27,7 +27,7 @@ export async function transact(actions: Action[]) {
       const result = await api.transact({actions}, { blocksBehind: 3, expireSeconds: 30 });
       const trx_id = result.transaction_id;
       for (const { account, name, data } of actions) {
-          console.log(JSON.stringify({account, name, data, trx_id}));
+          console.log(JSON.stringify({account, name, trx_id, data}));
       }
   } catch (e) {
       if (e instanceof RpcError) {

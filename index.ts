@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, ONE_HOUR } from "./src/config";
+import { rpc, ONE_HOUR, PAUSE_MS } from "./src/config";
 import { timeout, transact, push } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
@@ -18,9 +18,9 @@ async function main() {
     const hourly_counts = await get_hourly_counts( block_num ); // fetch hourly count data
     await save( block_num, hourly_counts ); // save locally as JSON
   } else {
-    console.log(block_num, 'already exists');
+    console.log(JSON.stringify({block_num, exists: true}));
   }
-  await timeout(60000); // 1 minute pause
+  await timeout(PAUSE_MS);
   await main();
 }
 main();
@@ -53,17 +53,17 @@ async function get_last_hour_block() {
   return (last_irreversible_block_num - ONE_HOUR) - last_irreversible_block_num % ONE_HOUR;
 }
 
-async function get_hourly_counts( block_num: number ) {
+async function get_hourly_counts( start_block: number ) {
   before = moment.utc(moment.now()).unix();
   const hourly_counts: Count = {
-    block_num,
+    block_num: start_block,
     actions: 0,
     transactions: 0,
   }
   // queue up promises
   const queue = new PQueue({concurrency: 20});
 
-  for (let i = block_num; i < block_num + ONE_HOUR; i++) {
+  for (let i = start_block; i < start_block + ONE_HOUR; i++) {
     queue.add(async () => {
       const block_counts = await get_block_counts( i )
       hourly_counts.actions += block_counts.actions;
@@ -71,7 +71,7 @@ async function get_hourly_counts( block_num: number ) {
 
       // logging
       const after = moment.utc(moment.now()).unix();
-      console.log(JSON.stringify({time: after - before, block_num: i, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
+      console.log(JSON.stringify({time: after - before, start_block, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
     });
   }
 
@@ -80,7 +80,7 @@ async function get_hourly_counts( block_num: number ) {
 
   // logging
   const after = moment.utc(moment.now()).unix();
-  console.log(JSON.stringify({time: after - before, block_num, hourly_counts}));
+  console.log(JSON.stringify({time: after - before, start_block, hourly_counts}));
   return hourly_counts;
 }
 
