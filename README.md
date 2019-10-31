@@ -31,6 +31,9 @@ NODEOS_ENDPOINT_CONTRACT="http://localhost:8888"
 ACTOR="blocktivity1"
 PERMISSION="push"
 PRIVATE_KEY="<PRIVATE KEY>"
+
+# (Optional) server-side settings
+ONE_HOUR=7200
 ```
 
 ## Quick Start
