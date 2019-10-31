@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, hyperion, client, ONE_HOUR } from "./src/config";
+import { rpc, rpc_history, hyperion, client, ONE_HOUR } from "./src/config";
 import { timeout } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
@@ -91,16 +91,29 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      block_counts.actions += await get_dfuse_actions_count( trx );
+      block_counts.actions += await get_v1_actions_count( trx );
     }
   }
   console.log(block_num, block_counts);
   return block_counts;
 }
 
+async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
+  if (retry <= 0) {
+    console.error("[ERROR] missing trx in v1 History", trx);
+    process.exit();
+  }
+  try {
+    const { traces } = await rpc_history.history_get_transaction( trx );
+    return traces.length;
+  } catch (e) {
+    return get_dfuse_actions_count( trx, retry - 1 )
+  }
+}
+
 async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
-    console.error("[ERROR] missing trx in Hyperion", trx);
+    console.error("[ERROR] missing trx in Dfuse", trx);
     process.exit();
   }
   try {
@@ -110,7 +123,6 @@ async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number
     return get_dfuse_actions_count( trx, retry - 1 )
   }
 }
-
 
 async function get_hyperion_actions_count( trx: string, retry = 3 ): Promise<number> {
   if (retry <= 0) {
