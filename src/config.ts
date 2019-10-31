@@ -2,14 +2,20 @@ import * as dotenv from "dotenv"
 import { Authorization } from "./interfaces";
 import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
+import { createDfuseClient } from "@dfuse/client";
 const { TextEncoder, TextDecoder } = require('util');
+
+;(global as any).fetch = require("node-fetch")
+;(global as any).WebSocket = require("ws")
 
 dotenv.config();
 
 const fetch = require('node-fetch');
 
 if (!process.env.PRIVATE_KEY) throw new Error("[PRIVATE_KEY] is required");
+if (!process.env.DFUSE_TOKEN) throw new Error("[DFUSE_TOKEN] is required");
 if (process.env.PRIVATE_KEY.includes("PRIVATE")) throw new Error("[PRIVATE_KEY] invalid key")
+if (process.env.DFUSE_TOKEN.includes("PRIVATE")) throw new Error("[DFUSE_TOKEN] invalid token")
 
 export const endpoint = process.env.NODEOS_ENDPOINT || 'http://api.eosn.io';
 export const endpoint_history = process.env.NODEOS_ENDPOINT_HISTORY || 'http://eos.greymass.com';
@@ -21,6 +27,7 @@ export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KE
 export const rpc = new JsonRpc(endpoint, { fetch });
 export const rpc_history = new JsonRpc(endpoint_history, { fetch });
 export const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+export const client = createDfuseClient({ apiKey, network: "mainnet" })
 export const authorization: Authorization[] = [{
   actor,
   permission,

@@ -17,6 +17,7 @@ NODEOS_ENDPOINT="http://api.eosn.io"
 NODEOS_ENDPOINT_HISTORY="http://eos.greymass.com"
 ACTOR="blocktivity1"
 PERMISSION="push"
+DFUSE_TOKEN="<PRIVATE DFUSE TOKEN>"
 PRIVATE_KEY="<PRIVATE KEY>"
 ```
 

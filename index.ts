@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, rpc_history, ONE_HOUR } from "./src/config";
+import { rpc, rpc_history, client, ONE_HOUR } from "./src/config";
 import { timeout } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
@@ -53,11 +53,17 @@ async function get_hourly_counts( block_num: number ) {
       const block_counts = await get_block_counts( i )
       hourly_counts.actions += block_counts.actions;
       hourly_counts.transactions += block_counts.transactions;
+
+      // logging
+      const after = moment.utc(moment.now()).unix();
+      console.log(JSON.stringify({time: after - before, block_num, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
     });
   }
 
   // wait until queue is finished
   await queue.onIdle();
+
+  // logging
   const after = moment.utc(moment.now()).unix();
   console.log(JSON.stringify({time: after - before, block_num, hourly_counts}));
   return hourly_counts;
@@ -95,11 +101,9 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
     // traces executed by smart contract
     // must fetch individual transaction
     } else {
-      block_counts.actions += await get_v1_actions_count( trx );
+      block_counts.actions += await get_dfuse_actions_count( trx );
     }
   }
-  const after = moment.utc(moment.now()).unix();
-  console.log(JSON.stringify({time: after - before, block_num, block_counts}));
   return block_counts;
 }
 
@@ -113,5 +117,18 @@ async function get_v1_actions_count( trx: string, retry = 3 ): Promise<number> {
     return traces.length;
   } catch (e) {
     return get_v1_actions_count( trx, retry - 1 )
+  }
+}
+
+async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise<number> {
+  if (retry <= 0) {
+    console.error("[ERROR] missing trx in Dfuse", trx);
+    process.exit();
+  }
+  try {
+    const {transaction} = await client.fetchTransaction( trx );
+    return transaction.actions.length;
+  } catch (e) {
+    return get_dfuse_actions_count( trx, retry - 1 )
   }
 }
