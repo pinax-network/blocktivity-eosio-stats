@@ -39,6 +39,7 @@ async function save( block_num: number, json: Count, retry = 3): Promise<void> {
   try {
     await transact([ push(json) ])
   } catch (e) {
+    console.error(JSON.stringify({error: "save", message: e.message}));
     return save( block_num, json, retry - 1);
   }
 

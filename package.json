@@ -7,7 +7,12 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
-    "build": "./scripts/build.sh"
+    "restart": "npm run compile && npm run deploy && npm start",
+    "deploy": "./scripts/deploy.sh",
+    "compile": "./scripts/compile.sh",
+    "test": "./scripts/test.sh",
+    "nodeos:start": "./scripts/start_nodeos.sh",
+    "nodeos:kill": "./scripts/kill_nodeos.sh"
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {

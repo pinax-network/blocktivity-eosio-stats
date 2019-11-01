@@ -33,7 +33,7 @@ export async function transact(actions: Action[]) {
       if (e instanceof RpcError) {
           const {name, what, details} = e.json.error
           const message = (details[0]) ? details[0].message : `[${name}] ${what}`;
-          console.error(message);
+          throw new Error(message);
       }
   }
 }

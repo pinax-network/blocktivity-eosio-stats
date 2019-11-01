@@ -2,9 +2,13 @@
 
 #include <eosio/eosio.hpp>
 #include <eosio/time.hpp>
+#include <eosio/singleton.hpp>
 #include <eosio/system.hpp>
 
 using namespace eosio;
+using namespace std;
+
+const uint64_t INTERVAL = 10;
 
 class [[eosio::contract("blocktivity")]] blocktivity : public contract {
 public:
@@ -19,9 +23,8 @@ public:
      */
     blocktivity( name receiver, name code, eosio::datastream<const char*> ds )
         : contract( receiver, code, ds ),
-            _hours( get_self(), get_self().value ),
-            _days( get_self(), get_self().value ),
-            _weeks( get_self(), get_self().value )
+            _periods( get_self(), get_self().value ),
+            _sum( get_self(), get_self().value )
     {}
 
     /**
@@ -50,10 +53,10 @@ public:
 
 private:
     /**
-     * ## TABLE `hours` & `days` & `weeks`
+     * ## TABLE `periods`
      *
      * - `{uint64_t} block_num` - block number start
-     * - `{time_point_sec} timestamp` - Timestamp based on Block Number
+     * - `{time_point_sec} timestamp` - row creation timestamp
      * - `{uint64_t} transactions` - number of actions during period
      * - `{uint64_t} actions` - number of transactions during period
      *
@@ -74,16 +77,41 @@ private:
         uint64_t                transactions;
         uint64_t                actions;
 
-        uint64_t primary_key() const { return block_num; }
+        uint64_t primary_key() const { return block_num * -1; }
+    };
+
+    /**
+     * ## TABLE `sum`
+     *
+     * - `{uint64_t} hour` - hourly number of actions
+     * - `{uint64_t} day` - daily number of actions
+     * - `{uint64_t} week` - weekly number of actions
+     *
+     * ### example
+     *
+     * ```json
+     * {
+     *   "hour": 123,
+     *   "day": 123,
+     *   "week": 123
+     * }
+     * ```
+     */
+    struct [[eosio::table("sum")]] sum_row {
+        uint64_t                hour = 0;
+        uint64_t                day = 0;
+        uint64_t                week = 0;
     };
 
     // Tables
-    typedef eosio::multi_index< "hours"_n, periods_row> hours_table;
-    typedef eosio::multi_index< "days"_n, periods_row> days_table;
-    typedef eosio::multi_index< "weeks"_n, periods_row> weeks_table;
+    typedef eosio::multi_index< "periods"_n, periods_row> periods_table;
+    typedef eosio::singleton< "sum"_n, sum_row> sum_table;
 
     // local instances of the multi indexes
-    hours_table     _hours;
-    days_table      _days;
-    weeks_table     _weeks;
+    periods_table       _periods;
+    sum_table           _sum;
+
+    // private helpers
+    void add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
+    void calculate_periods();
 };

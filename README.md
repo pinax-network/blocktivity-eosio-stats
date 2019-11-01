@@ -78,10 +78,10 @@ Pushes hourly (7200 blocks) statistics of transaction & action counts.
 cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 ```
 
-## TABLE `hours` & `days` & `weeks`
+## TABLE `periods`
 
 - `{uint64_t} block_num` - block number start
-- `{time_point_sec} timestamp` - Timestamp based on Block Number
+- `{time_point_sec} timestamp` - row creation timestamp
 - `{uint64_t} transactions` - number of actions during period
 - `{uint64_t} actions` - number of transactions during period
 
@@ -93,5 +93,21 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
   "timestamp": "2019-08-07T18:37:37",
   "transactions": 299282,
   "actions": 281802
+}
+```
+
+## TABLE `sum`
+
+- `{uint64_t} hour` - hourly number of actions
+- `{uint64_t} day` - daily number of actions
+- `{uint64_t} week` - weekly number of actions
+
+### example
+
+```json
+{
+  "hour": 123,
+  "day": 123,
+  "week": 123
 }
 ```
