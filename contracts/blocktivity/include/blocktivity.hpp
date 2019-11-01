@@ -8,7 +8,7 @@
 using namespace eosio;
 using namespace std;
 
-const uint64_t INTERVAL = 10;
+const uint64_t INTERVAL = 7200;
 
 class [[eosio::contract("blocktivity")]] blocktivity : public contract {
 public:
