@@ -7,7 +7,9 @@
 
 - [EOS](https://bloks.io/account/blocktivity1)
 
-### cURL
+### cURL - `periods`
+
+Request **periods** (hourly intervals of 7200 blocks)
 
 ```bash
 curl --request POST \
@@ -16,6 +18,51 @@ curl --request POST \
   --header 'content-type: application/json' \
   --data '{"code":"blocktivity1","table":"periods","scope":"blocktivity1","json":true}'
 ```
+
+> JSON response
+
+```json
+{
+  "rows": [
+    {
+      "block_num": 87696000,
+      "timestamp": "2019-11-02T01:54:29",
+      "transactions": 379379,
+      "actions": 1211942
+    }
+    ...
+  ],
+  "more": true
+}
+```
+
+### cURL - `sum`
+
+Request **sum** statistics
+
+```bash
+curl --request POST \
+  --url http://api.eosn.io/v1/chain/get_table_rows \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"code":"blocktivity1","table":"sum","scope":"blocktivity1","json":true}'
+```
+
+> JSON response
+
+```json
+{
+  "rows": [
+    {
+      "hour": 1211942,
+      "day": 0,
+      "week": 0
+    }
+  ],
+  "more": false
+}
+```
+
 
 # 1. Server-Side
 
@@ -117,8 +164,8 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 
 ```json
 {
-  "hour": 123,
-  "day": 123,
-  "week": 123
+  "hour": 1211942,
+  "day": 0,
+  "week": 0
 }
 ```
