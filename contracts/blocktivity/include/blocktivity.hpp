@@ -49,6 +49,9 @@ public:
     [[eosio::action]]
     void push( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
 
+    [[eosio::action]]
+    void clean( const eosio::name table, const std::optional<eosio::name> scope );
+
     using push_action = eosio::action_wrapper<"push"_n, &blocktivity::push>;
 
 private:

@@ -46,3 +46,17 @@ void blocktivity::calculate_periods()
     // save stats
     _sum.set( sum, get_self() );
 }
+
+void blocktivity::clean( const eosio::name table, const std::optional<eosio::name> scope )
+{
+    require_auth( get_self() );
+
+    // periods
+    if (table == "periods"_n) {
+        auto periods_itr = _periods.begin();
+        while ( periods_itr != _periods.end() ) {
+            periods_itr = _periods.erase(periods_itr);
+        }
+    }
+    else if (table == "sum"_n) _sum.remove();
+}

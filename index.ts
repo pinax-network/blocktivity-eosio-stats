@@ -85,7 +85,7 @@ async function get_hourly_counts( start_block: number ) {
   return hourly_counts;
 }
 
-async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> {
+async function get_block_counts( block_num: number, retry = 10 ): Promise<Count> {
 
   let block: any;
 
