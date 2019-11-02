@@ -47,11 +47,17 @@ async function save( block_num: number, json: Count, retry = 3): Promise<void> {
   write.sync(path.join(__dirname, "tmp", block_num + ".json"), json);
 }
 
-async function get_last_hour_block() {
-  const { last_irreversible_block_num } = await rpc.get_info();
+async function get_last_hour_block(): Promise<number> {
+  try {
+    const { last_irreversible_block_num } = await rpc.get_info();
 
-  // minus 1 hour & round down to the nearest 1 hour interval
-  return (last_irreversible_block_num - ONE_HOUR) - last_irreversible_block_num % ONE_HOUR;
+    // minus 1 hour & round down to the nearest 1 hour interval
+    return (last_irreversible_block_num - ONE_HOUR) - last_irreversible_block_num % ONE_HOUR;
+  } catch (e) {
+    console.error("[ERROR] get info");
+    timeout(5 * 1000) // pause for 5s
+  }
+  return get_last_hour_block();
 }
 
 async function get_hourly_counts( start_block: number ) {
