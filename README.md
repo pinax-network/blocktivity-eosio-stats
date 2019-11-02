@@ -39,6 +39,7 @@ PRIVATE_KEY="<PRIVATE KEY>"
 # (Optional) server-side settings
 ONE_HOUR=7200
 PAUSE_MS=60000
+CONCURRENCY=3
 ```
 
 ## Quick Start

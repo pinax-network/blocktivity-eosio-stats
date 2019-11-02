@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { rpc, ONE_HOUR, PAUSE_MS } from "./src/config";
+import { rpc, ONE_HOUR, PAUSE_MS, CONCURRENCY } from "./src/config";
 import { timeout, transact, push } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
@@ -62,7 +62,7 @@ async function get_hourly_counts( start_block: number ) {
     transactions: 0,
   }
   // queue up promises
-  const queue = new PQueue({concurrency: 20});
+  const queue = new PQueue({concurrency: CONCURRENCY});
 
   for (let i = start_block; i < start_block + ONE_HOUR; i++) {
     queue.add(async () => {
@@ -85,7 +85,7 @@ async function get_hourly_counts( start_block: number ) {
   return hourly_counts;
 }
 
-async function get_block_counts( block_num: number, retry = 10 ): Promise<Count> {
+async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> {
 
   let block: any;
 
