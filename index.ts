@@ -91,7 +91,8 @@ async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> 
 
   if (retry <= 0) {
     console.error("[ERROR] missing block", block_num);
-    process.exit();
+    await timeout(5 * 1000); // pause for 5s
+    return get_block_counts( block_num, 5 );
   }
 
   try {
