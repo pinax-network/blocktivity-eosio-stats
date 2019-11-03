@@ -23,8 +23,7 @@ async function history() {
       hourly_counts.block_num = history_block_num;
 
       await transact([ push( hourly_counts ) ]);
-      console.log(JSON.stringify({history_block_num, hourly_counts, exists: true}));
-      console.log("save")
+      console.log(JSON.stringify({history_block_num, exists: true}));
     }
   }
 }
