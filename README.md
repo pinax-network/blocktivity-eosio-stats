@@ -26,7 +26,6 @@ curl --request POST \
   "rows": [
     {
       "block_num": 87696000,
-      "timestamp": "2019-11-02T01:54:29",
       "transactions": 379379,
       "actions": 1211942
     }
@@ -54,9 +53,10 @@ curl --request POST \
 {
   "rows": [
     {
-      "hour": 1211942,
-      "day": 0,
-      "week": 0
+      "hour": 875365,
+      "day": 20773084,
+      "week": 83237200,
+      "timestamp": "2019-11-03T16:48:21"
     }
   ],
   "more": false
@@ -157,17 +157,15 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 - `{uint64_t} hour` - hourly number of actions
 - `{uint64_t} day` - daily number of actions
 - `{uint64_t} week` - weekly number of actions
-- `{uint64_t} block_num` - start of block number
 - `{time_point_sec} timestamp` - last updated
 
 ### example
 
 ```json
 {
-  "hour": 123,
-  "day": 123,
-  "week": 123,
-  "block_num": 87458400,
-  "timestamp": "2019-08-07T18:37:37"
+  "hour": 875365,
+  "day": 20773084,
+  "week": 83237200,
+  "timestamp": "2019-11-03T16:48:21"
 }
 ```

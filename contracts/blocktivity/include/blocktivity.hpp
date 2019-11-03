@@ -86,18 +86,16 @@ private:
      * - `{uint64_t} hour` - hourly number of actions
      * - `{uint64_t} day` - daily number of actions
      * - `{uint64_t} week` - weekly number of actions
-     * - `{uint64_t} block_num` - start of block number
      * - `{time_point_sec} timestamp` - last updated
      *
      * ### example
      *
      * ```json
      * {
-     *   "hour": 123,
-     *   "day": 123,
-     *   "week": 123,
-     *   "block_num": 87458400,
-     *   "timestamp": "2019-08-07T18:37:37"
+     *   "hour": 875365,
+     *   "day": 20773084,
+     *   "week": 83237200,
+     *   "timestamp": "2019-11-03T16:48:21"
      * }
      * ```
      */
