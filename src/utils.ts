@@ -48,7 +48,10 @@ export function exists( block_num: number ) {
   return fs.existsSync(path.join(__dirname, "..", "tmp", block_num + ".json"));
 }
 
-export async function save( block_num: number, json: Count, retry = 3): Promise<void> {
+export async function save( block_num: number, json: Count, retry = 10): Promise<void> {
+  // save locally
+  write.sync(path.join(__dirname, "..", "tmp", block_num + ".json"), json);
+
   if (retry <= 0) {
     console.error(JSON.stringify({error: "failed to push on-chain", block_num, json}));
     return;
@@ -59,11 +62,9 @@ export async function save( block_num: number, json: Count, retry = 3): Promise<
     await transact([ push(json) ])
   } catch (e) {
     console.error(JSON.stringify({error: "save", message: e.message}));
+    await timeout(5000) // 5 sec pause
     return save( block_num, json, retry - 1);
   }
-
-  // save locally
-  write.sync(path.join(__dirname, "..", "tmp", block_num + ".json"), json);
 }
 
 export function loads( block_num: number ): Count {
