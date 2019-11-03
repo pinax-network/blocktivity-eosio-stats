@@ -8,7 +8,7 @@
 using namespace eosio;
 using namespace std;
 
-const uint64_t INTERVAL = 7200;
+const uint64_t ONE_HOUR = 7200;
 
 class [[eosio::contract("blocktivity")]] blocktivity : public contract {
 public:
@@ -58,17 +58,15 @@ private:
     /**
      * ## TABLE `periods`
      *
-     * - `{uint64_t} block_num` - block number start
-     * - `{time_point_sec} timestamp` - row creation timestamp
-     * - `{uint64_t} transactions` - number of actions during period
-     * - `{uint64_t} actions` - number of transactions during period
+     * - `{uint64_t} block_num` - start of block number
+     * - `{uint64_t} transactions` - number of actions during 1 hour period
+     * - `{uint64_t} actions` - number of transactions during 1 hour period
      *
      * ### example
      *
      * ```json
      * {
      *   "block_num": 87458400,
-     *   "timestamp": "2019-08-07T18:37:37",
      *   "transactions": 299282,
      *   "actions": 281802
      * }
@@ -76,7 +74,6 @@ private:
      */
     struct [[eosio::table("periods")]] periods_row {
         uint64_t                block_num;
-        eosio::time_point_sec   timestamp;
         uint64_t                transactions;
         uint64_t                actions;
 
@@ -89,6 +86,8 @@ private:
      * - `{uint64_t} hour` - hourly number of actions
      * - `{uint64_t} day` - daily number of actions
      * - `{uint64_t} week` - weekly number of actions
+     * - `{uint64_t} block_num` - start of block number
+     * - `{time_point_sec} timestamp` - last updated
      *
      * ### example
      *
@@ -96,7 +95,9 @@ private:
      * {
      *   "hour": 123,
      *   "day": 123,
-     *   "week": 123
+     *   "week": 123,
+     *   "block_num": 87458400,
+     *   "timestamp": "2019-08-07T18:37:37"
      * }
      * ```
      */
@@ -104,6 +105,7 @@ private:
         uint64_t                hour = 0;
         uint64_t                day = 0;
         uint64_t                week = 0;
+        eosio::time_point_sec   timestamp;
     };
 
     // Tables

@@ -4,6 +4,7 @@ import { rpc, ONE_HOUR, PAUSE_MS, CONCURRENCY } from "./src/config";
 import { timeout, transact, push } from "./src/utils";
 import { Count } from "./src/interfaces";
 import * as write from "write-json-file";
+import * as load from "load-json-file";
 import PQueue from 'p-queue';
 import moment from "moment";
 import { get_transaction_count } from "./src/get_transaction";
@@ -33,12 +34,18 @@ async function history() {
       const hourly_counts = await get_hourly_counts( history_block_num ); // fetch hourly count data
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
+      const hourly_counts = load_hourly_counts( block_num );
+      await transact([ push( hourly_counts ) ])
       console.log(JSON.stringify({history_block_num, exists: true}));
     }
   }
   main();
 }
 history();
+
+function load_hourly_counts( block_num: number ): Count {
+  return load.sync(path.join(__dirname, "tmp", block_num + ".json"));
+}
 
 function exists( block_num: number ) {
   return fs.existsSync(path.join(__dirname, "tmp", block_num + ".json"));

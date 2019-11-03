@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
-    "restart": "npm run compile && npm run deploy && npm start",
+    "restart": "npm run compile && npm run deploy && npm run test",
     "deploy": "./scripts/deploy.sh",
     "compile": "./scripts/compile.sh",
     "test": "./scripts/test.sh",
@@ -20,6 +20,7 @@
     "@eoscafe/hyperion": "^3.2.4",
     "dotenv": "^8.2.0",
     "eosjs": "^20.0.0",
+    "load-json-file": "^6.2.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "p-queue": "^6.2.0",

@@ -10,11 +10,11 @@ void blocktivity::push( const uint64_t block_num, const uint64_t transactions, c
 
 void blocktivity::add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions )
 {
-    check( block_num % INTERVAL == 0, "[block_num] must be a modulo of " + to_string(INTERVAL));
+    check( block_num % ONE_HOUR == 0, "[block_num] must be a modulo of " + to_string(ONE_HOUR));
+    check( _periods.find( block_num * -1 ) == _periods.end(), "[block_num] already exists" );
 
     _periods.emplace( get_self(), [&]( auto& row ) {
         row.block_num = block_num;
-        row.timestamp = current_time_point();
         row.transactions = transactions;
         row.actions = actions;
     });
@@ -24,6 +24,7 @@ void blocktivity::calculate_periods()
 {
     // counters
     auto sum = _sum.get_or_default();
+    sum.timestamp = current_time_point();
     uint64_t actions = 0;
     int count = 0;
 
