@@ -34,7 +34,7 @@ async function history() {
       const hourly_counts = await get_hourly_counts( history_block_num ); // fetch hourly count data
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
-      const hourly_counts = load_hourly_counts( block_num );
+      const hourly_counts = load_hourly_counts( history_block_num );
       try {
         await transact([ push( hourly_counts ) ])
       } catch (e) {
