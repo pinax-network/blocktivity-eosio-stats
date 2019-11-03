@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node index.ts",
+    "history": "ts-node history.ts",
     "restart": "npm run compile && npm run deploy && npm run test",
     "deploy": "./scripts/deploy.sh",
     "compile": "./scripts/compile.sh",

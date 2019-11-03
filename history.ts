@@ -1,9 +1,9 @@
 import * as path from "path";
 import * as load from "load-json-file";
-import { Count } from "../src/interfaces";
-import { ONE_HOUR, rpc, actor } from "../src/config";
-import { get_last_hour_block, get_hourly_counts } from "../src/get_hourly_counts";
-import { exists, save, push, transact } from "../src/utils";
+import { Count } from "./src/interfaces";
+import { ONE_HOUR, rpc, actor } from "./src/config";
+import { get_last_hour_block, get_hourly_counts } from "./src/get_hourly_counts";
+import { exists, save, push, transact } from "./src/utils";
 
 async function history() {
   const block_num = await get_last_hour_block();
