@@ -35,7 +35,11 @@ async function history() {
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
       const hourly_counts = load_hourly_counts( block_num );
-      await transact([ push( hourly_counts ) ])
+      try {
+        await transact([ push( hourly_counts ) ])
+      } catch (e) {
+        console.error(e);
+      }
       console.log(JSON.stringify({history_block_num, exists: true}));
     }
   }
