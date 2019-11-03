@@ -7,6 +7,12 @@
 
 - [EOS](https://bloks.io/account/blocktivity1)
 
+## History solution (required)
+
+- [Dfuse](https://www.dfuse.io/en)
+- [EOSIO v1 History](https://developers.eos.io/eosio-nodeos/reference)
+- [Hyperion](https://github.com/eosrio/Hyperion-History-API)
+
 ### cURL - `periods`
 
 Request **periods** (hourly intervals of 7200 blocks)
