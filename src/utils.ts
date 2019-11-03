@@ -38,6 +38,8 @@ export async function transact(actions: Action[]) {
           const {name, what, details} = e.json.error
           const message = (details[0]) ? details[0].message : `[${name}] ${what}`;
           throw new Error(message);
+      } else {
+        console.error(e);
       }
   }
 }

@@ -20,12 +20,11 @@ async function history() {
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
       const hourly_counts = loads( history_block_num );
-      try {
-        await transact([ push( hourly_counts ) ])
-      } catch (e) {
-        console.error(e);
-      }
-      console.log(JSON.stringify({history_block_num, exists: true}));
+      hourly_counts.block_num = history_block_num;
+
+      await transact([ push( hourly_counts ) ]);
+      console.log(JSON.stringify({history_block_num, hourly_counts, exists: true}));
+      console.log("save")
     }
   }
 }
