@@ -62,6 +62,7 @@ void blocktivity::calculate_periods( const uint64_t block_num )
             sum.week = actions;
             average.hour = actions / 168;
             average.day = actions / 7;
+            average.week = actions;
 
             // calculate record
             if (actions > record.week) record.week = actions;
@@ -96,5 +97,44 @@ void blocktivity::clean( const eosio::name table, const std::optional<eosio::nam
             periods_itr = _periods.erase(periods_itr);
         }
     }
-    else if (table == "sum"_n) _sum.remove();
+    if (table == "sum"_n) _sum.remove();
+    if (table == "average"_n) _average.remove();
+    if (table == "record"_n) _record.remove();
+
+}
+
+void blocktivity::updaterecord()
+{
+    require_auth( get_self() );
+
+    auto record = _record.get_or_default();
+    record.timestamp = current_time_point();
+
+    // counters
+    uint64_t actions = 0;
+    int count = 0;
+
+    // iterate over each 1 hour period
+    auto itr = _periods.begin();
+    while ( itr != _periods.end() ) {
+        // sum actions
+        actions += itr->actions;
+        count += 1;
+
+        // last 1 hour
+        if (itr->actions > record.hour) record.hour = itr->actions;
+
+        // 1 day rolling average
+        if (count >= 24) {
+            uint64_t average_action = actions * 24 / count;
+            if (average_action > record.day) record.day = average_action;
+        }
+        // 7 days record
+        if (count == 168) {
+            if (actions > record.week) record.week = actions;
+        }
+        if ( itr != _periods.end()) itr++;
+    }
+
+    _record.set( record, get_self() );
 }

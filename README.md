@@ -116,13 +116,13 @@ $ npm start
 ## ACTION
 
 - [`push`](#action-push)
-- [`clean`](#action-clean)
 
 ## TABLE
 
-- [`hours`](#table-hours)
-- [`days`](#table-days)
-- [`weeks`](#table-weeks)
+- [`periods`](#table-periods)
+- [`sum`](#table-sum)
+- [`average`](#table-average)
+- [`record`](#table-record)
 
 ## ACTION `push`
 
@@ -180,6 +180,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 
 - `{uint64_t} hour` - average hourly number of actions (7 day average)
 - `{uint64_t} day` - average daily number of actions (7 day average)
+- `{uint64_t} week` - weekly number of actions
 - `{time_point_sec} timestamp` - last updated
 
 ### example
@@ -188,6 +189,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 {
   "hour": 875365,
   "day": 20773084,
+  "week": 83237200,
   "timestamp": "2019-11-03T16:48:21"
 }
 ```

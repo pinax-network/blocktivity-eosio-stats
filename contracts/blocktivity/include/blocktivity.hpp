@@ -54,6 +54,9 @@ public:
     [[eosio::action]]
     void clean( const eosio::name table, const std::optional<eosio::name> scope );
 
+    [[eosio::action]]
+    void updaterecord();
+
     using push_action = eosio::action_wrapper<"push"_n, &blocktivity::push>;
 
 private:
@@ -113,6 +116,7 @@ private:
      *
      * - `{uint64_t} hour` - average hourly number of actions (7 day average)
      * - `{uint64_t} day` - average daily number of actions (7 day average)
+     * - `{uint64_t} week` - weekly number of actions
      * - `{time_point_sec} timestamp` - last updated
      *
      * ### example
@@ -121,6 +125,7 @@ private:
      * {
      *   "hour": 875365,
      *   "day": 20773084,
+     *   "week": 83237200,
      *   "timestamp": "2019-11-03T16:48:21"
      * }
      * ```
@@ -128,6 +133,7 @@ private:
     struct [[eosio::table("average")]] average_row {
         uint64_t                hour = 0;
         uint64_t                day = 0;
+        uint64_t                week = 0;
         eosio::time_point_sec   timestamp;
     };
 
