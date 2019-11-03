@@ -116,5 +116,5 @@ private:
 
     // private helpers
     void add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
-    void calculate_periods();
+    void calculate_periods( const uint64_t block_num );
 };

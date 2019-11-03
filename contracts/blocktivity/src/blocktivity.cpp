@@ -5,7 +5,7 @@ void blocktivity::push( const uint64_t block_num, const uint64_t transactions, c
     require_auth( get_self() );
 
     add_hour( block_num, transactions, actions );
-    calculate_periods();
+    calculate_periods( block_num );
 }
 
 void blocktivity::add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions )
@@ -20,7 +20,7 @@ void blocktivity::add_hour( const uint64_t block_num, const uint64_t transaction
     });
 }
 
-void blocktivity::calculate_periods()
+void blocktivity::calculate_periods( const uint64_t block_num )
 {
     // counters
     auto sum = _sum.get_or_default();
@@ -44,6 +44,9 @@ void blocktivity::calculate_periods()
         if ( count > 168 ) itr = _periods.erase( itr );
         if ( itr != _periods.end()) itr++;
     }
+    // current block_num must be within 168 periods
+    check( _periods.find( block_num * -1 ) != _periods.end(), "[block_num] is older then 168 periods" );
+
     // save stats
     _sum.set( sum, get_self() );
 }
