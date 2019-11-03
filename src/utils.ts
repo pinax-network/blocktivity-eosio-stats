@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as write from "write-json-file";
+import * as load from "load-json-file";
 import { RpcError } from 'eosjs';
 import { api, authorization, actor, rpc, ONE_HOUR } from "./config";
 import { Action, Count } from "./interfaces";
@@ -60,5 +61,9 @@ export async function save( block_num: number, json: Count, retry = 3): Promise<
   }
 
   // save locally
-  write.sync(path.join(__dirname, "tmp", block_num + ".json"), json);
+  write.sync(path.join(__dirname, "..", "tmp", block_num + ".json"), json);
+}
+
+export function loads( block_num: number ): Count {
+  return load.sync(path.join(__dirname, "..", "tmp", block_num + ".json"));
 }

@@ -1,9 +1,7 @@
-import * as path from "path";
-import * as load from "load-json-file";
-import { Count } from "./src/interfaces";
+
 import { ONE_HOUR, rpc, actor } from "./src/config";
 import { get_last_hour_block, get_hourly_counts } from "./src/get_hourly_counts";
-import { exists, save, push, transact } from "./src/utils";
+import { exists, save, push, transact, loads } from "./src/utils";
 
 async function history() {
   const block_num = await get_last_hour_block();
@@ -21,7 +19,7 @@ async function history() {
       const hourly_counts = await get_hourly_counts( history_block_num ); // fetch hourly count data
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
-      const hourly_counts = load_hourly_counts( history_block_num );
+      const hourly_counts = loads( history_block_num );
       try {
         await transact([ push( hourly_counts ) ])
       } catch (e) {
@@ -32,10 +30,6 @@ async function history() {
   }
 }
 history();
-
-function load_hourly_counts( block_num: number ): Count {
-  return load.sync(path.join(__dirname, "..", "tmp", block_num + ".json"));
-}
 
 async function get_existing_block_nums(): Promise<Set<number>> {
   const { rows } = await rpc.get_table_rows({ json: true, code: actor, table: "periods", scope: actor, limit: 200 })
