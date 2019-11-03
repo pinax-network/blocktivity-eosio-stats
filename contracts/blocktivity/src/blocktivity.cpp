@@ -22,9 +22,17 @@ void blocktivity::add_hour( const uint64_t block_num, const uint64_t transaction
 
 void blocktivity::calculate_periods( const uint64_t block_num )
 {
-    // counters
+    // sum stats
     auto sum = _sum.get_or_default();
+    auto average = _average.get_or_default();
+    auto record = _record.get_or_default();
+    auto previous_record = _record.get_or_default();
+
+    // last updated time
     sum.timestamp = current_time_point();
+    average.timestamp = current_time_point();
+
+    // counters
     uint64_t actions = 0;
     int count = 0;
 
@@ -36,9 +44,28 @@ void blocktivity::calculate_periods( const uint64_t block_num )
         count += 1;
 
         // update hour/day/week stats
-        if (count == 1) sum.hour = actions;
-        if (count == 24) sum.day = actions;
-        if (count == 168) sum.week = actions;
+        if (count == 1) {
+            sum.hour = actions;
+
+            // calculate record
+            if (actions > record.hour) record.hour = actions;
+        }
+        // 1 day
+        if (count == 24) {
+            sum.day = actions;
+
+            // calculate record
+            if (actions > record.day) record.day = actions;
+        }
+        // 7 days
+        if (count == 168) {
+            sum.week = actions;
+            average.hour = actions / 168;
+            average.day = actions / 7;
+
+            // calculate record
+            if (actions > record.week) record.week = actions;
+        }
 
         // erase any hour periods that exceed 1 week
         if ( count > 168 ) itr = _periods.erase( itr );
@@ -49,6 +76,13 @@ void blocktivity::calculate_periods( const uint64_t block_num )
 
     // save stats
     _sum.set( sum, get_self() );
+    _average.set( average, get_self() );
+
+    // only save if record has been modified
+    if (previous_record.hour != record.hour || previous_record.day != record.day || previous_record.week != record.week) {
+        record.timestamp = current_time_point();
+        _record.set( record, get_self() );
+    }
 }
 
 void blocktivity::clean( const eosio::name table, const std::optional<eosio::name> scope )

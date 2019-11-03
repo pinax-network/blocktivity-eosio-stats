@@ -175,3 +175,37 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
   "timestamp": "2019-11-03T16:48:21"
 }
 ```
+
+## TABLE `average`
+
+- `{uint64_t} hour` - average hourly number of actions (7 day average)
+- `{uint64_t} day` - average daily number of actions (7 day average)
+- `{time_point_sec} timestamp` - last updated
+
+### example
+
+```json
+{
+  "hour": 875365,
+  "day": 20773084,
+  "timestamp": "2019-11-03T16:48:21"
+}
+```
+
+## TABLE `record`
+
+- `{uint64_t} hour` - highest hourly number of actions
+- `{uint64_t} day` - highest daily number of actions
+- `{uint64_t} week` - highest weekly number of actions
+- `{time_point_sec} timestamp` - last updated
+
+### example
+
+```json
+{
+  "hour": 875365,
+  "day": 20773084,
+  "week": 83237200,
+  "timestamp": "2019-11-03T16:48:21"
+}
+```

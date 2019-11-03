@@ -168,4 +168,5 @@ cleos push action blocktivity push '[87847200, 1, 65]' -p blocktivity
 cleos push action blocktivity push '[87854400, 1, 65]' -p blocktivity
 cleos push action blocktivity push '[87861600, 1, 65]' -p blocktivity
 cleos push action blocktivity push '[87868800, 1, 65]' -p blocktivity
-cleos push action blocktivity push '[87876000, 20, 205]' -p blocktivity
+# cleos push action blocktivity push '[87876000, 20, 205]' -p blocktivity
+# cleos push action blocktivity push '[87890400, 10, 5]' -p blocktivity

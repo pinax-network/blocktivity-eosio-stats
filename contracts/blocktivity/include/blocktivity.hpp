@@ -24,7 +24,9 @@ public:
     blocktivity( name receiver, name code, eosio::datastream<const char*> ds )
         : contract( receiver, code, ds ),
             _periods( get_self(), get_self().value ),
-            _sum( get_self(), get_self().value )
+            _sum( get_self(), get_self().value ),
+            _average( get_self(), get_self().value ),
+            _record( get_self(), get_self().value )
     {}
 
     /**
@@ -106,13 +108,66 @@ private:
         eosio::time_point_sec   timestamp;
     };
 
+    /**
+     * ## TABLE `average`
+     *
+     * - `{uint64_t} hour` - average hourly number of actions (7 day average)
+     * - `{uint64_t} day` - average daily number of actions (7 day average)
+     * - `{time_point_sec} timestamp` - last updated
+     *
+     * ### example
+     *
+     * ```json
+     * {
+     *   "hour": 875365,
+     *   "day": 20773084,
+     *   "timestamp": "2019-11-03T16:48:21"
+     * }
+     * ```
+     */
+    struct [[eosio::table("average")]] average_row {
+        uint64_t                hour = 0;
+        uint64_t                day = 0;
+        eosio::time_point_sec   timestamp;
+    };
+
+    /**
+     * ## TABLE `record`
+     *
+     * - `{uint64_t} hour` - highest hourly number of actions
+     * - `{uint64_t} day` - highest daily number of actions
+     * - `{uint64_t} week` - highest weekly number of actions
+     * - `{time_point_sec} timestamp` - last updated
+     *
+     * ### example
+     *
+     * ```json
+     * {
+     *   "hour": 875365,
+     *   "day": 20773084,
+     *   "week": 83237200,
+     *   "timestamp": "2019-11-03T16:48:21"
+     * }
+     * ```
+     */
+    struct [[eosio::table("record")]] record_row {
+        uint64_t                hour = 0;
+        uint64_t                day = 0;
+        uint64_t                week = 0;
+        eosio::time_point_sec   timestamp;
+    };
+
     // Tables
     typedef eosio::multi_index< "periods"_n, periods_row> periods_table;
     typedef eosio::singleton< "sum"_n, sum_row> sum_table;
+    typedef eosio::singleton< "average"_n, average_row> average_table;
+    typedef eosio::singleton< "record"_n, record_row> record_table;
 
     // local instances of the multi indexes
     periods_table       _periods;
     sum_table           _sum;
+    average_table       _average;
+    record_table        _record;
 
     // private helpers
     void add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
