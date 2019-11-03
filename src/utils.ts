@@ -42,7 +42,7 @@ export async function transact(actions: Action[]) {
 }
 
 export function exists( block_num: number ) {
-  return fs.existsSync(path.join(__dirname, "tmp", block_num + ".json"));
+  return fs.existsSync(path.join(__dirname, "..", "tmp", block_num + ".json"));
 }
 
 export async function save( block_num: number, json: Count, retry = 3): Promise<void> {
