@@ -39,17 +39,18 @@ public:
      * ### params
      *
      * - `{uint64_t} block_num` - block number start (rounded to the nearest 7200 interval)
+     * - `{time_point_sec} timestamp` - block creation timestamp (UTC)
      * - `{uint64_t} transactions` - number of actions during 1 hour period
      * - `{uint64_t} actions` - number of transactions during 1 hour period
      *
      * ### example
      *
      * ```bash
-     * cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
+     * cleos push action blocktivity push '[87458400, "2019-11-03T16:48:21", 299282, 281802]' -p blocktivity
      * ```
      */
     [[eosio::action]]
-    void push( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
+    void push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions );
 
     [[eosio::action]]
     void clean( const eosio::name table, const std::optional<eosio::name> scope );
@@ -64,6 +65,7 @@ private:
      * ## TABLE `periods`
      *
      * - `{uint64_t} block_num` - start of block number
+     * - `{time_point_sec} timestamp` - block creation timestamp (UTC)
      * - `{uint64_t} transactions` - number of actions during 1 hour period
      * - `{uint64_t} actions` - number of transactions during 1 hour period
      *
@@ -72,13 +74,15 @@ private:
      * ```json
      * {
      *   "block_num": 87458400,
+     *   "timestamp": "2019-11-03T16:48:21",
      *   "transactions": 299282,
-     *   "actions": 281802
+     *   "actions": 281802,
      * }
      * ```
      */
     struct [[eosio::table("periods")]] periods_row {
         uint64_t                block_num;
+        eosio::time_point_sec   timestamp;
         uint64_t                transactions;
         uint64_t                actions;
 
@@ -91,7 +95,7 @@ private:
      * - `{uint64_t} hour` - hourly number of actions
      * - `{uint64_t} day` - daily number of actions
      * - `{uint64_t} week` - weekly number of actions
-     * - `{time_point_sec} timestamp` - last updated
+     * - `{time_point_sec} last_updated` - last updated (UTC)
      *
      * ### example
      *
@@ -100,7 +104,7 @@ private:
      *   "hour": 875365,
      *   "day": 20773084,
      *   "week": 83237200,
-     *   "timestamp": "2019-11-03T16:48:21"
+     *   "last_updated": "2019-11-03T16:48:21"
      * }
      * ```
      */
@@ -108,7 +112,7 @@ private:
         uint64_t                hour = 0;
         uint64_t                day = 0;
         uint64_t                week = 0;
-        eosio::time_point_sec   timestamp;
+        eosio::time_point_sec   last_updated;
     };
 
     /**
@@ -117,7 +121,7 @@ private:
      * - `{uint64_t} hour` - average hourly number of actions (7 day average)
      * - `{uint64_t} day` - average daily number of actions (7 day average)
      * - `{uint64_t} week` - weekly number of actions
-     * - `{time_point_sec} timestamp` - last updated
+     * - `{time_point_sec} last_updated` - last updated (UTC)
      *
      * ### example
      *
@@ -126,7 +130,7 @@ private:
      *   "hour": 875365,
      *   "day": 20773084,
      *   "week": 83237200,
-     *   "timestamp": "2019-11-03T16:48:21"
+     *   "last_updated": "2019-11-03T16:48:21"
      * }
      * ```
      */
@@ -134,7 +138,7 @@ private:
         uint64_t                hour = 0;
         uint64_t                day = 0;
         uint64_t                week = 0;
-        eosio::time_point_sec   timestamp;
+        eosio::time_point_sec   last_updated;
     };
 
     /**
@@ -143,7 +147,7 @@ private:
      * - `{uint64_t} hour` - highest hourly number of actions
      * - `{uint64_t} day` - highest daily number of actions
      * - `{uint64_t} week` - highest weekly number of actions
-     * - `{time_point_sec} timestamp` - last updated
+     * - `{time_point_sec} last_updated` - last updated (UTC)
      *
      * ### example
      *
@@ -152,7 +156,7 @@ private:
      *   "hour": 875365,
      *   "day": 20773084,
      *   "week": 83237200,
-     *   "timestamp": "2019-11-03T16:48:21"
+     *   "last_updated": "2019-11-03T16:48:21"
      * }
      * ```
      */
@@ -160,7 +164,7 @@ private:
         uint64_t                hour = 0;
         uint64_t                day = 0;
         uint64_t                week = 0;
-        eosio::time_point_sec   timestamp;
+        eosio::time_point_sec   last_updated;
     };
 
     // Tables
@@ -176,6 +180,6 @@ private:
     record_table        _record;
 
     // private helpers
-    void add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions );
+    void add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions );
     void calculate_periods( const uint64_t block_num );
 };

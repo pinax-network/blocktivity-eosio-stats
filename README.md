@@ -32,6 +32,7 @@ curl --request POST \
   "rows": [
     {
       "block_num": 87696000,
+      "timestamp": "2019-11-03T16:48:21",
       "transactions": 379379,
       "actions": 1211942
     }
@@ -133,18 +134,20 @@ Pushes hourly (7200 blocks) statistics of transaction & action counts.
 ### params
 
 - `{uint64_t} block_num` - block number start (rounded to the nearest 7200 interval)
+- `{time_point_sec} timestamp` - block creation timestamp (UTC)
 - `{uint64_t} transactions` - number of actions during 1 hour period
 - `{uint64_t} actions` - number of transactions during 1 hour period
 
 ### example
 
 ```bash
-cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
+cleos push action blocktivity push '[87458400, "2019-11-03T16:48:21", 299282, 281802]' -p blocktivity
 ```
 
-## TABLE `hours`
+## TABLE `periods`
 
 - `{uint64_t} block_num` - start of block number
+- `{time_point_sec} timestamp` - block creation timestamp (UTC)
 - `{uint64_t} transactions` - number of actions during 1 hour period
 - `{uint64_t} actions` - number of transactions during 1 hour period
 
@@ -153,6 +156,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 ```json
 {
   "block_num": 87458400,
+  "timestamp": "2019-11-03T16:48:21",
   "transactions": 299282,
   "actions": 281802
 }
@@ -163,7 +167,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 - `{uint64_t} hour` - hourly number of actions
 - `{uint64_t} day` - daily number of actions
 - `{uint64_t} week` - weekly number of actions
-- `{time_point_sec} timestamp` - last updated
+- `{time_point_sec} last_updated` - last updated (UTC)
 
 ### example
 
@@ -172,7 +176,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
   "hour": 875365,
   "day": 20773084,
   "week": 83237200,
-  "timestamp": "2019-11-03T16:48:21"
+  "last_updated": "2019-11-03T16:48:21"
 }
 ```
 
@@ -181,7 +185,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 - `{uint64_t} hour` - average hourly number of actions (7 day average)
 - `{uint64_t} day` - average daily number of actions (7 day average)
 - `{uint64_t} week` - weekly number of actions
-- `{time_point_sec} timestamp` - last updated
+- `{time_point_sec} last_updated` - last updated (UTC)
 
 ### example
 
@@ -190,7 +194,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
   "hour": 875365,
   "day": 20773084,
   "week": 83237200,
-  "timestamp": "2019-11-03T16:48:21"
+  "last_updated": "2019-11-03T16:48:21"
 }
 ```
 
@@ -199,7 +203,7 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
 - `{uint64_t} hour` - highest hourly number of actions
 - `{uint64_t} day` - highest daily number of actions
 - `{uint64_t} week` - highest weekly number of actions
-- `{time_point_sec} timestamp` - last updated
+- `{time_point_sec} last_updated` - last updated (UTC)
 
 ### example
 
@@ -208,6 +212,6 @@ cleos push action blocktivity push '[87458400, 299282, 281802]' -p blocktivity
   "hour": 875365,
   "day": 20773084,
   "week": 83237200,
-  "timestamp": "2019-11-03T16:48:21"
+  "last_updated": "2019-11-03T16:48:21"
 }
 ```

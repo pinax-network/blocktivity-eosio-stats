@@ -1,20 +1,21 @@
 #include "blocktivity.hpp"
 
-void blocktivity::push( const uint64_t block_num, const uint64_t transactions, const uint64_t actions )
+void blocktivity::push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions )
 {
     require_auth( get_self() );
 
-    add_hour( block_num, transactions, actions );
+    add_hour( block_num, timestamp, transactions, actions );
     calculate_periods( block_num );
 }
 
-void blocktivity::add_hour( const uint64_t block_num, const uint64_t transactions, const uint64_t actions )
+void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions )
 {
     check( block_num % ONE_HOUR == 0, "[block_num] must be a modulo of " + to_string(ONE_HOUR));
     check( _periods.find( block_num * -1 ) == _periods.end(), "[block_num] already exists" );
 
     _periods.emplace( get_self(), [&]( auto& row ) {
         row.block_num = block_num;
+        row.timestamp = timestamp;
         row.transactions = transactions;
         row.actions = actions;
     });
@@ -29,8 +30,9 @@ void blocktivity::calculate_periods( const uint64_t block_num )
     auto previous_record = _record.get_or_default();
 
     // last updated time
-    sum.timestamp = current_time_point();
-    average.timestamp = current_time_point();
+    sum.last_updated = current_time_point();
+    average.last_updated = current_time_point();
+    record.last_updated = current_time_point();
 
     // counters
     uint64_t actions = 0;
@@ -81,7 +83,6 @@ void blocktivity::calculate_periods( const uint64_t block_num )
 
     // only save if record has been modified
     if (previous_record.hour != record.hour || previous_record.day != record.day || previous_record.week != record.week) {
-        record.timestamp = current_time_point();
         _record.set( record, get_self() );
     }
 }
@@ -108,7 +109,7 @@ void blocktivity::updaterecord()
     require_auth( get_self() );
 
     auto record = _record.get_or_default();
-    record.timestamp = current_time_point();
+    record.last_updated = current_time_point();
 
     // counters
     uint64_t actions = 0;

@@ -1,4 +1,4 @@
-import { Count } from "./interfaces";
+import { Count, Block } from "./interfaces";
 import { rpc, ONE_HOUR, CONCURRENCY } from "./config";
 import { timeout } from "./utils";
 import PQueue from 'p-queue';
@@ -8,10 +8,13 @@ import moment from "moment";
 // global timer
 let before = moment.utc(moment.now()).unix();
 
-export async function get_hourly_counts( start_block: number ) {
+export async function get_hourly_counts( block: Block ) {
+  const start_block = block.block_num;
   before = moment.utc(moment.now()).unix();
+
   const hourly_counts: Count = {
-    block_num: start_block,
+    block_num: block.block_num,
+    timestamp: block.timestamp,
     actions: 0,
     transactions: 0,
   }
@@ -20,7 +23,7 @@ export async function get_hourly_counts( start_block: number ) {
 
   for (let i = start_block; i < start_block + ONE_HOUR; i++) {
     queue.add(async () => {
-      const block_counts = await get_block_counts( i )
+      const block_counts = await get_block_counts( await get_block(i) )
       hourly_counts.actions += block_counts.actions;
       hourly_counts.transactions += block_counts.transactions;
 
@@ -39,26 +42,22 @@ export async function get_hourly_counts( start_block: number ) {
   return hourly_counts;
 }
 
-export async function get_block_counts( block_num: number, retry = 3 ): Promise<Count> {
-
-  let block: any;
-
-  if (retry <= 0) {
-    console.error("[ERROR] missing block", block_num);
-    await timeout(5 * 1000); // pause for 5s
-    return get_block_counts( block_num, 5 );
-  }
-
+export async function get_block( block_num: number ): Promise<Block> {
   try {
-    // get block info
-    block = await rpc.get_block( block_num );
+    const block: any = await rpc.get_block( block_num );
+    return block;
   } catch (e) {
-    return get_block_counts( block_num, retry - 1 );
+    console.error("[ERROR] missing block", block_num);
+    await timeout(1000); // pause for 1s
+    return get_block( block_num );
   }
+}
 
+export async function get_block_counts( block: Block ): Promise<Count> {
   // store statistic counters
   const block_counts: Count = {
-    block_num,
+    block_num: block.block_num,
+    timestamp: block.timestamp,
     actions: 0,
     transactions: 0,
   }
@@ -91,3 +90,7 @@ export async function get_last_hour_block(): Promise<number> {
   }
   return get_last_hour_block();
 }
+
+(async () => {
+  console.log(await get_block_counts( await get_block(88045131) ));
+})()
