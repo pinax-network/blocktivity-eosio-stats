@@ -56,6 +56,9 @@ public:
     void clean( const eosio::name table, const std::optional<eosio::name> scope );
 
     [[eosio::action]]
+    void delperiod( const uint64_t block_num );
+
+    [[eosio::action]]
     void updaterecord();
 
     using push_action = eosio::action_wrapper<"push"_n, &blocktivity::push>;

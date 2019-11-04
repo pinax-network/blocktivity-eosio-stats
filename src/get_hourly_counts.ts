@@ -1,5 +1,5 @@
 import { Count, Block } from "./interfaces";
-import { rpc, ONE_HOUR, CONCURRENCY } from "./config";
+import { rpc, ONE_HOUR, CONCURRENCY, actor } from "./config";
 import { timeout } from "./utils";
 import PQueue from 'p-queue';
 import { get_transaction_count } from "./get_transaction";
@@ -95,4 +95,10 @@ export async function get_last_hour_block(): Promise<number> {
     timeout(5 * 1000) // pause for 5s
   }
   return get_last_hour_block();
+}
+
+export async function get_existing_block_nums(): Promise<Set<number>> {
+  const { rows } = await rpc.get_table_rows({ json: true, code: actor, table: "periods", scope: actor, limit: 200 })
+
+  return new Set<number>(rows.map((i: any) => i.block_num));
 }

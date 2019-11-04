@@ -1,6 +1,6 @@
 
 import { ONE_HOUR, rpc, actor } from "./src/config";
-import { get_last_hour_block, get_hourly_counts, get_block } from "./src/get_hourly_counts";
+import { get_last_hour_block, get_hourly_counts, get_block, get_existing_block_nums } from "./src/get_hourly_counts";
 import { exists, save, push, transact, loads, save_local } from "./src/utils";
 
 async function history() {
@@ -21,10 +21,6 @@ async function history() {
       await save( history_block_num, hourly_counts ); // save locally as JSON
     } else {
       const hourly_counts = loads( history_block_num );
-      if (!hourly_counts.timestamp) {
-        hourly_counts.timestamp = (await get_block( history_block_num )).timestamp;
-        save_local( block_num, hourly_counts );
-      }
       hourly_counts.block_num = history_block_num;
 
       await transact([ push( hourly_counts ) ]);
@@ -33,9 +29,3 @@ async function history() {
   }
 }
 history();
-
-async function get_existing_block_nums(): Promise<Set<number>> {
-  const { rows } = await rpc.get_table_rows({ json: true, code: actor, table: "periods", scope: actor, limit: 200 })
-
-  return new Set<number>(rows.map((i: any) => i.block_num));
-}

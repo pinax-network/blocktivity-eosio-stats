@@ -15,3 +15,9 @@ Clean table rows
 ## Description
 
 Update record table
+
+<h1 class="contract">delperiod</h1>
+
+## Description
+
+Delete single period row

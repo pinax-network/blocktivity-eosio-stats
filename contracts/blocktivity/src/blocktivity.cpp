@@ -101,7 +101,15 @@ void blocktivity::clean( const eosio::name table, const std::optional<eosio::nam
     if (table == "sum"_n) _sum.remove();
     if (table == "average"_n) _average.remove();
     if (table == "record"_n) _record.remove();
+}
 
+void blocktivity::delperiod( const uint64_t block_num )
+{
+    require_auth( get_self() );
+
+    auto periods_itr = _periods.find( block_num * -1 );
+    check( periods_itr != _periods.end(), "[block_num] does not exist");
+    _periods.erase( periods_itr );
 }
 
 void blocktivity::updaterecord()
