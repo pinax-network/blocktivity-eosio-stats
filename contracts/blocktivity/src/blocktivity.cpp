@@ -1,14 +1,14 @@
 #include "blocktivity.hpp"
 
-void blocktivity::push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions )
+void blocktivity::push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words )
 {
     require_auth( get_self() );
 
-    add_hour( block_num, timestamp, transactions, actions );
+    add_hour( block_num, timestamp, transactions, actions, cpu_usage_us, net_usage_words );
     calculate_periods( block_num );
 }
 
-void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions )
+void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words )
 {
     check( block_num % ONE_HOUR == 0, "[block_num] must be a modulo of " + to_string(ONE_HOUR));
     check( _periods.find( block_num * -1 ) == _periods.end(), "[block_num] already exists" );
@@ -18,6 +18,8 @@ void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_se
         row.timestamp = timestamp;
         row.transactions = transactions;
         row.actions = actions;
+        row.cpu_usage_us = cpu_usage_us;
+        row.net_usage_words = net_usage_words;
     });
 }
 

@@ -42,6 +42,8 @@ public:
      * - `{time_point_sec} timestamp` - block creation timestamp (UTC)
      * - `{uint64_t} transactions` - number of actions during 1 hour period
      * - `{uint64_t} actions` - number of transactions during 1 hour period
+     * - `{uint64_t} cpu_usage_us` - number of cpu_usage_us during 1 hour period
+     * - `{uint64_t} net_usage_words` - number of net_usage_words during 1 hour period
      *
      * ### example
      *
@@ -50,7 +52,7 @@ public:
      * ```
      */
     [[eosio::action]]
-    void push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions );
+    void push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words );
 
     [[eosio::action]]
     void clean( const eosio::name table, const std::optional<eosio::name> scope );
@@ -189,6 +191,6 @@ private:
     record_table        _record;
 
     // private helpers
-    void add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions );
+    void add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words );
     void calculate_periods( const uint64_t block_num );
 };

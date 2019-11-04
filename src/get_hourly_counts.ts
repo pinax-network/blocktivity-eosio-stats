@@ -28,6 +28,8 @@ export async function get_hourly_counts( block: Block ) {
       const block_counts = await get_block_counts( await get_block(i) )
       hourly_counts.actions += block_counts.actions;
       hourly_counts.transactions += block_counts.transactions;
+      hourly_counts.cpu_usage_us += block_counts.cpu_usage_us;
+      hourly_counts.net_usage_words += block_counts.net_usage_words;
 
       // logging
       const after = moment.utc(moment.now()).unix();
