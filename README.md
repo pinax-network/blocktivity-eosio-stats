@@ -34,7 +34,9 @@ curl --request POST \
       "block_num": 87696000,
       "timestamp": "2019-11-03T16:48:21",
       "transactions": 379379,
-      "actions": 1211942
+      "actions": 1211942,
+      "cpu_usage_us": 63476,
+      "net_usage_words": 1772
     }
     ...
   ],
@@ -150,6 +152,8 @@ cleos push action blocktivity push '[87458400, "2019-11-03T16:48:21", 299282, 28
 - `{time_point_sec} timestamp` - block creation timestamp (UTC)
 - `{uint64_t} transactions` - number of actions during 1 hour period
 - `{uint64_t} actions` - number of transactions during 1 hour period
+- `{uint64_t} cpu_usage_us` - number of cpu_usage_us during 1 hour period
+- `{uint64_t} net_usage_words` - number of net_usage_words during 1 hour period
 
 ### example
 
@@ -158,7 +162,9 @@ cleos push action blocktivity push '[87458400, "2019-11-03T16:48:21", 299282, 28
   "block_num": 87458400,
   "timestamp": "2019-11-03T16:48:21",
   "transactions": 299282,
-  "actions": 281802
+  "actions": 281802,
+  "cpu_usage_us": 63476,
+  "net_usage_words": 1772
 }
 ```
 

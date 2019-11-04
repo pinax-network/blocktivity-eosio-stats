@@ -68,6 +68,8 @@ private:
      * - `{time_point_sec} timestamp` - block creation timestamp (UTC)
      * - `{uint64_t} transactions` - number of actions during 1 hour period
      * - `{uint64_t} actions` - number of transactions during 1 hour period
+     * - `{uint64_t} cpu_usage_us` - number of cpu_usage_us during 1 hour period
+     * - `{uint64_t} net_usage_words` - number of net_usage_words during 1 hour period
      *
      * ### example
      *
@@ -77,6 +79,8 @@ private:
      *   "timestamp": "2019-11-03T16:48:21",
      *   "transactions": 299282,
      *   "actions": 281802,
+     *   "cpu_usage_us": 63476,
+     *   "net_usage_words": 1772
      * }
      * ```
      */
@@ -85,6 +89,8 @@ private:
         eosio::time_point_sec   timestamp;
         uint64_t                transactions;
         uint64_t                actions;
+        uint64_t                cpu_usage_us = 0;
+        uint64_t                net_usage_words = 0;
 
         uint64_t primary_key() const { return block_num * -1; }
     };

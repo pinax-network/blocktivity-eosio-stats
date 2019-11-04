@@ -17,6 +17,8 @@ export async function get_hourly_counts( block: Block ) {
     timestamp: block.timestamp,
     actions: 0,
     transactions: 0,
+    cpu_usage_us: 0,
+    net_usage_words: 0,
   }
   // queue up promises
   const queue = new PQueue({concurrency: CONCURRENCY});
@@ -60,11 +62,15 @@ export async function get_block_counts( block: Block ): Promise<Count> {
     timestamp: block.timestamp,
     actions: 0,
     transactions: 0,
+    cpu_usage_us: 0,
+    net_usage_words: 0,
   }
 
   // count each transaction
-  for ( const { trx } of block.transactions ) {
+  for ( const { trx, cpu_usage_us, net_usage_words } of block.transactions ) {
     block_counts.transactions += 1;
+    block_counts.cpu_usage_us += cpu_usage_us;
+    block_counts.net_usage_words += net_usage_words;
 
     // full trace in block
     if (typeof(trx) == "object") {
@@ -90,7 +96,3 @@ export async function get_last_hour_block(): Promise<number> {
   }
   return get_last_hour_block();
 }
-
-(async () => {
-  console.log(await get_block_counts( await get_block(88045131) ));
-})()

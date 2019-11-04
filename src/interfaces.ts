@@ -15,6 +15,8 @@ export interface Count {
   timestamp: string;
   actions: number;
   transactions: number;
+  cpu_usage_us: number;
+  net_usage_words: number;
 }
 
 export interface Block {
