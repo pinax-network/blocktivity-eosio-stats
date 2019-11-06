@@ -13,7 +13,7 @@
 - [EOSIO v1 History](https://developers.eos.io/eosio-nodeos/reference)
 - [Hyperion](https://github.com/eosrio/Hyperion-History-API)
 
-### Example - NodeJS/Javascript
+### Examples - NodeJS/Javascript
 
 **install**
 
@@ -21,7 +21,7 @@
 $ npm install node-fetch eosjs
 ```
 
-**example.js**
+**sum.js**
 
 ```js
 const fetch = require("node-fetch");
@@ -42,7 +42,60 @@ rpc.get_table_rows({ json: true, code, scope, table }).then((data => {
 }))
 ```
 
-### cURL - `periods`
+**periods.js**
+
+```js
+const fetch = require("node-fetch");
+const { JsonRpc } = require("eosjs");
+
+const rpc = new JsonRpc("https://api.eosn.io", { fetch });
+
+const code = "blocktivity1";
+const scope = "blocktivity1";
+const table = "periods";
+const limit = 168
+
+rpc.get_table_rows({ json: true, code, scope, table, limit }).then((data => {
+
+  for (const row of data.rows) {
+    console.log(row);
+    // { block_num: 88228800,
+    //   timestamp: '2019-11-05T02:35:49',
+    //   transactions: 178877,
+    //   actions: 826073,
+    //   cpu_usage_us: 316587911,
+    //   net_usage_words: 8364304 }
+  }
+}))
+```
+
+### Examples - cURL
+
+Request **sum** statistics
+
+```bash
+curl --request POST \
+  --url http://api.eosn.io/v1/chain/get_table_rows \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"code":"blocktivity1","table":"sum","scope":"blocktivity1","json":true}'
+```
+
+> JSON response
+
+```json
+{
+  "rows": [
+    {
+      "hour": 875365,
+      "day": 20773084,
+      "week": 83237200,
+      "timestamp": "2019-11-03T16:48:21"
+    }
+  ],
+  "more": false
+}
+```
 
 Request **periods** (hourly intervals of 7200 blocks)
 
@@ -72,35 +125,6 @@ curl --request POST \
   "more": true
 }
 ```
-
-### cURL - `sum`
-
-Request **sum** statistics
-
-```bash
-curl --request POST \
-  --url http://api.eosn.io/v1/chain/get_table_rows \
-  --header 'accept: application/json' \
-  --header 'content-type: application/json' \
-  --data '{"code":"blocktivity1","table":"sum","scope":"blocktivity1","json":true}'
-```
-
-> JSON response
-
-```json
-{
-  "rows": [
-    {
-      "hour": 875365,
-      "day": 20773084,
-      "week": 83237200,
-      "timestamp": "2019-11-03T16:48:21"
-    }
-  ],
-  "more": false
-}
-```
-
 
 # 1. Server-Side
 
