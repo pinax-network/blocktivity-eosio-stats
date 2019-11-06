@@ -136,7 +136,7 @@ curl --request POST \
 
 ## Install
 
-```
+```bash
 $ git clone https://github.com/EOS-Nation/blocktivity-eos-stats.git
 $ cd blocktivity-eos-stats
 $ npm install
@@ -146,7 +146,7 @@ $ npm install
 
 **.env**
 
-```env
+```bash
 # Standard Nodeos
 NODEOS_ENDPOINT="http://api.eosn.io"
 
