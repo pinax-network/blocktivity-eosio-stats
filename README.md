@@ -1,7 +1,13 @@
 # Blocktivity EOSIO Stats
 
+> [EOS Nation](https://eosnation.io) has built an open-source solution for Blocktivity statistics
+
+Which includes:
+
 1. Server-Side: Calculate action & transaction counts
 2. Smart Contract: Hourly/Daily/Weekly statistics
+
+We plan on deploying this solution/smart contracts on every EOSIO compatible blockchains to allow for more transparent statistics.
 
 ## Chains
 
