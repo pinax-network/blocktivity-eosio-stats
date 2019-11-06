@@ -29,6 +29,7 @@ export const endpoint_contract = process.env.NODEOS_ENDPOINT_CONTRACT || 'http:/
 export const actor = process.env.ACTOR || 'blocktivity1';
 export const permission = process.env.PERMISSION || 'push';
 export const apiKey = process.env.DFUSE_TOKEN || '';
+export const network = process.env.NETWORK || 'mainnet';
 
 export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY]);
 export const rpc = new JsonRpc(endpoint, { fetch });
@@ -36,7 +37,7 @@ export const rpc_contract = new JsonRpc(endpoint_contract, { fetch });
 export const hyperion = new HyperionRpc(endpoint, { fetch })
 export const rpc_history = new JsonRpc(endpoint_history, { fetch });
 export const api = new Api({ rpc: rpc_contract, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
-export const client = createDfuseClient({ apiKey, network: "mainnet" })
+export const client = createDfuseClient({ apiKey, network })
 export const authorization: Authorization[] = [{
   actor,
   permission,

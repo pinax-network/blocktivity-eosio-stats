@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { RpcError } from 'eosjs';
-import { api, authorization, actor, rpc, ONE_HOUR } from "./config";
+import { api, authorization, actor, network } from "./config";
 import { Action, Count } from "./interfaces";
 
 export function timeout(ms: number) {
@@ -45,11 +45,11 @@ export async function transact(actions: Action[]) {
 }
 
 export function exists( block_num: number ) {
-  return fs.existsSync(path.join(__dirname, "..", "tmp", block_num + ".json"));
+  return fs.existsSync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`));
 }
 
 export function save_local( block_num: number, json: Count ) {
-  write.sync(path.join(__dirname, "..", "tmp", block_num + ".json"), json);
+  write.sync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`), json);
 }
 
 export async function save( block_num: number, json: Count, retry = 10): Promise<void> {
@@ -71,5 +71,5 @@ export async function save( block_num: number, json: Count, retry = 10): Promise
 }
 
 export function loads( block_num: number ): Count {
-  return load.sync(path.join(__dirname, "..", "tmp", block_num + ".json"));
+  return load.sync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`));
 }

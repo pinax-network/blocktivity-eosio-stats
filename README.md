@@ -12,6 +12,7 @@ We plan on deploying this solution/smart contracts on every EOSIO compatible blo
 ## Chains
 
 - [EOS](https://bloks.io/account/blocktivity1)
+- [Jungle](https://jungle.bloks.io/account/blocktivity1)
 
 ## History solution (required)
 
@@ -152,6 +153,7 @@ NODEOS_ENDPOINT="http://api.eosn.io"
 
 # (Required) History Solution
 HISTORY_TYPE="dfuse"
+NETWORK="mainnet"
 NODEOS_ENDPOINT_HISTORY="http://eos.greymass.com"
 DFUSE_TOKEN="<PRIVATE DFUSE TOKEN>"
 
