@@ -54,6 +54,18 @@ module.exports = {
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-meetone-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "http://meetone.eosn.io",
+        HISTORY_TYPE: "v1",
+        NODEOS_HISTORY_ENDPOINT: "https://fullnode.meet.one",
+        ACTOR: "blocktivit.m"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
     }
   ]
 };
