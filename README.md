@@ -155,12 +155,14 @@ NODEOS_ENDPOINT="http://eos.eosn.io"
 HISTORY_TYPE="dfuse"
 NETWORK="mainnet"
 NODEOS_ENDPOINT_HISTORY="http://eos.greymass.com"
-DFUSE_TOKEN="<PRIVATE DFUSE TOKEN>"
 
 # (Optional) Push results to on-chain contract
 NODEOS_ENDPOINT_CONTRACT="http://localhost:8888"
 ACTOR="blocktivity1"
 PERMISSION="push"
+
+# (Private) keys & tokens
+DFUSE_TOKEN="<PRIVATE DFUSE TOKEN>"
 PRIVATE_KEY="<PRIVATE KEY>"
 
 # (Optional) server-side settings

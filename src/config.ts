@@ -15,6 +15,9 @@ const fetch = require('node-fetch');
 
 export const HISTORY_TYPE = process.env.HISTORY_TYPE || '';
 
+if (!process.env.NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required");
+if (!process.env.NETWORK) throw new Error("[NETWORK] is required");
+
 if (!process.env.PRIVATE_KEY) throw new Error("[PRIVATE_KEY] is required");
 if (process.env.PRIVATE_KEY.includes("PRIVATE")) throw new Error("[PRIVATE_KEY] invalid key")
 
@@ -27,13 +30,13 @@ if (HISTORY_TYPE == 'v1') {
   if (!process.env.NODEOS_ENDPOINT_HISTORY) throw new Error("[NODEOS_ENDPOINT_HISTORY] is required");
 }
 
-export const endpoint = process.env.NODEOS_ENDPOINT || 'http://eos.eosn.io';
-export const endpoint_history = process.env.NODEOS_ENDPOINT_HISTORY || 'http://eos.greymass.com';
+export const endpoint = process.env.NODEOS_ENDPOINT;
+export const endpoint_history = process.env.NODEOS_ENDPOINT_HISTORY || "";
 export const endpoint_contract = process.env.NODEOS_ENDPOINT_CONTRACT || endpoint;
 export const actor = process.env.ACTOR || 'blocktivity1';
 export const permission = process.env.PERMISSION || 'push';
 export const apiKey = process.env.DFUSE_TOKEN || '';
-export const network = process.env.NETWORK || 'mainnet';
+export const network = process.env.NETWORK;
 
 export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY]);
 export const rpc = new JsonRpc(endpoint, { fetch });
