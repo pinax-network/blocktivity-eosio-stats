@@ -5,9 +5,52 @@ module.exports = {
       script: 'index.ts',
       env: {
         NODEOS_ENDPOINT: "http://eos.eosn.io",
-        NODEOS_ENDPOINT_HISTORY: "http://eos.greymass.com",
-        ACTOR: "blocktivity1",
-        PERMISSION: "push",
+        HISTORY_TYPE: "dfuse",
+        NETWORK: "mainnet"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-jungle-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "http://jungle.eosn.io",
+        HISTORY_TYPE: "dfuse",
+        NETWORK: "jungle"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-kylin-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "http://kylin.eosn.io",
+        HISTORY_TYPE: "dfuse",
+        NETWORK: "kylin"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-bos-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "http://bos.eosn.io",
+        HISTORY_TYPE: "v1",
+        NODEOS_HISTORY_ENDPOINT: "http://api.bossweden.org"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-wax-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "http://wax.eosn.io",
+        HISTORY_TYPE: "dfuse",
+        NETWORK: "wax"
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"

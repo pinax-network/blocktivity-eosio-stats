@@ -1,5 +1,5 @@
 
-import { ONE_HOUR, rpc, actor } from "./src/config";
+import { ONE_HOUR } from "./src/config";
 import { get_last_hour_block, get_hourly_counts, get_block, get_existing_block_nums } from "./src/get_hourly_counts";
 import { exists, save, push, transact, loads, save_local } from "./src/utils";
 

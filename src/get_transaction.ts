@@ -5,7 +5,7 @@ export async function get_transaction_count( trx: string ) {
     case "dfuse": return get_dfuse_actions_count( trx )
     case "hyperion": return get_hyperion_actions_count( trx )
     case "v1": return get_v1_actions_count( trx )
-    default: return get_v1_actions_count( trx )
+    default: return 0;
   }
 }
 

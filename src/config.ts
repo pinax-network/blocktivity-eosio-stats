@@ -13,7 +13,7 @@ dotenv.config();
 
 const fetch = require('node-fetch');
 
-export const HISTORY_TYPE = process.env.HISTORY_TYPE || 'dfuse';
+export const HISTORY_TYPE = process.env.HISTORY_TYPE || '';
 
 if (!process.env.PRIVATE_KEY) throw new Error("[PRIVATE_KEY] is required");
 if (process.env.PRIVATE_KEY.includes("PRIVATE")) throw new Error("[PRIVATE_KEY] invalid key")
@@ -23,9 +23,13 @@ if (HISTORY_TYPE == 'dfuse') {
   if (process.env.DFUSE_TOKEN.includes("PRIVATE")) throw new Error("[DFUSE_TOKEN] invalid token")
 }
 
-export const endpoint = process.env.NODEOS_ENDPOINT || 'http://api.eosn.io';
+if (HISTORY_TYPE == 'v1') {
+  if (!process.env.NODEOS_ENDPOINT_HISTORY) throw new Error("[NODEOS_ENDPOINT_HISTORY] is required");
+}
+
+export const endpoint = process.env.NODEOS_ENDPOINT || 'http://eos.eosn.io';
 export const endpoint_history = process.env.NODEOS_ENDPOINT_HISTORY || 'http://eos.greymass.com';
-export const endpoint_contract = process.env.NODEOS_ENDPOINT_CONTRACT || 'http://localhost:8888';
+export const endpoint_contract = process.env.NODEOS_ENDPOINT_CONTRACT || endpoint;
 export const actor = process.env.ACTOR || 'blocktivity1';
 export const permission = process.env.PERMISSION || 'push';
 export const apiKey = process.env.DFUSE_TOKEN || '';

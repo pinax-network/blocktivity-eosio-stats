@@ -34,7 +34,7 @@ $ npm install node-fetch eosjs
 const fetch = require("node-fetch");
 const { JsonRpc } = require("eosjs");
 
-const rpc = new JsonRpc("https://api.eosn.io", { fetch });
+const rpc = new JsonRpc("https://eos.eosn.io", { fetch });
 
 const code = "blocktivity1";
 const scope = "blocktivity1";
@@ -55,7 +55,7 @@ rpc.get_table_rows({ json: true, code, scope, table }).then((data => {
 const fetch = require("node-fetch");
 const { JsonRpc } = require("eosjs");
 
-const rpc = new JsonRpc("https://api.eosn.io", { fetch });
+const rpc = new JsonRpc("https://eos.eosn.io", { fetch });
 
 const code = "blocktivity1";
 const scope = "blocktivity1";
@@ -82,7 +82,7 @@ Request **sum** statistics
 
 ```bash
 curl --request POST \
-  --url http://api.eosn.io/v1/chain/get_table_rows \
+  --url http://eos.eosn.io/v1/chain/get_table_rows \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --data '{"code":"blocktivity1","table":"sum","scope":"blocktivity1","json":true}' | jq .
@@ -108,7 +108,7 @@ Request **periods** (hourly intervals of 7200 blocks)
 
 ```bash
 curl --request POST \
-  --url http://api.eosn.io/v1/chain/get_table_rows \
+  --url http://eos.eosn.io/v1/chain/get_table_rows \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --data '{"code":"blocktivity1","table":"periods","scope":"blocktivity1","json":true,"limit":168}' | jq .
@@ -149,7 +149,7 @@ $ npm install
 
 ```bash
 # Standard Nodeos
-NODEOS_ENDPOINT="http://api.eosn.io"
+NODEOS_ENDPOINT="http://eos.eosn.io"
 
 # (Required) History Solution
 HISTORY_TYPE="dfuse"
