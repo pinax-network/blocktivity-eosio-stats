@@ -39,7 +39,8 @@ module.exports = {
       env: {
         NODEOS_ENDPOINT: "http://bos.eosn.io",
         HISTORY_TYPE: "v1",
-        NODEOS_HISTORY_ENDPOINT: "http://api.bossweden.org"
+        NODEOS_HISTORY_ENDPOINT: "http://api.bossweden.org",
+        NETWORK: "bos"
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
@@ -62,7 +63,8 @@ module.exports = {
         NODEOS_ENDPOINT: "http://meetone.eosn.io",
         HISTORY_TYPE: "v1",
         NODEOS_HISTORY_ENDPOINT: "https://fullnode.meet.one",
-        ACTOR: "blocktivit.m"
+        ACTOR: "blocktivit.m",
+        NETWORK: "meetone"
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
