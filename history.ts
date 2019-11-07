@@ -8,7 +8,7 @@ export async function history() {
   const block_nums = await get_existing_block_nums();
 
   // get last week
-  for (let i = 168; i > 0; i--) {
+  for (let i = 167; i > 0; i--) {
     const history_block_num = block_num - i * ONE_HOUR;
 
     if (block_nums.has(history_block_num)) {
