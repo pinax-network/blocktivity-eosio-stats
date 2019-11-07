@@ -1,9 +1,9 @@
 
 import { ONE_HOUR } from "./src/config";
 import { get_last_hour_block, get_hourly_counts, get_block, get_existing_block_nums } from "./src/get_hourly_counts";
-import { exists, save, push, transact, loads, save_local } from "./src/utils";
+import { exists, save, push, transact, loads } from "./src/utils";
 
-async function history() {
+export async function history() {
   const block_num = await get_last_hour_block();
   const block_nums = await get_existing_block_nums();
 
@@ -28,4 +28,8 @@ async function history() {
     }
   }
 }
-history();
+
+// (async () => {
+//   await history();
+// })
+
