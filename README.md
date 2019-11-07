@@ -12,7 +12,11 @@ We plan on deploying this solution/smart contracts on every EOSIO compatible blo
 ## Chains
 
 - [EOS](https://bloks.io/account/blocktivity1)
-- [Jungle](https://jungle.bloks.io/account/blocktivity1)
+- [BOS](https://bos.bloks.io/account/blocktivity1)
+- [WAX](https://wax.bloks.io/account/blocktivity1)
+- [MEETONE](https://meetone.bloks.io/account/blocktivit.m)
+- [Jungle](https://jungle.bloks.io/account/blocktivity1) (Testnet)
+- [Kylin](https://kylin.bloks.io/account/blocktivity1) (Testnet)
 
 ## History solution (required)
 
