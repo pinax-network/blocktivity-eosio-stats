@@ -17,8 +17,8 @@ export const HISTORY_TYPE = process.env.HISTORY_TYPE || '';
 if (!process.env.NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required");
 if (!process.env.NETWORK) throw new Error("[NETWORK] is required");
 
-if (!process.env.PRIVATE_KEY) throw new Error("[PRIVATE_KEY] is required");
-if (process.env.PRIVATE_KEY.includes("PRIVATE")) throw new Error("[PRIVATE_KEY] invalid key")
+if (!process.env.PRIVATE_KEYS) throw new Error("[PRIVATE_KEYS] is required");
+if (process.env.PRIVATE_KEYS.includes("PRIVATE")) throw new Error("[PRIVATE_KEYS] invalid key")
 
 if (HISTORY_TYPE == 'dfuse') {
   if (!process.env.DFUSE_TOKEN) throw new Error("[DFUSE_TOKEN] is required");
@@ -38,7 +38,7 @@ export const apiKey = process.env.DFUSE_TOKEN || '';
 export const network = process.env.NETWORK;
 export const COSIGN = process.env.COSIGN || '';
 
-export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY]);
+export const signatureProvider = new JsSignatureProvider((process.env.PRIVATE_KEYS || "").split(","));
 export const rpc = new JsonRpc(endpoint, { fetch });
 export const rpc_contract = new JsonRpc(endpoint_contract, { fetch });
 export const hyperion = new HyperionRpc(endpoint, { fetch })
