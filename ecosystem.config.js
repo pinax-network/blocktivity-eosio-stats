@@ -6,7 +6,8 @@ module.exports = {
       env: {
         NODEOS_ENDPOINT: "http://eos.eosn.io",
         HISTORY_TYPE: "dfuse",
-        NETWORK: "mainnet"
+        NETWORK: "mainnet",
+        COSIGN: "proxy4nation@payforcpu"
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"

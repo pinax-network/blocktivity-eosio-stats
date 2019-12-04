@@ -3,8 +3,9 @@ import * as fs from "fs";
 import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { RpcError } from 'eosjs';
-import { api, authorization, actor, network } from "./config";
-import { Action, Count } from "./interfaces";
+import { api, actor, network, authorization } from "./config";
+import { Count } from "./interfaces";
+import { Action } from "eosjs/dist/eosjs-serialize";
 
 export function timeout(ms: number) {
   return new Promise((resolve) => {

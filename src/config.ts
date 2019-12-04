@@ -1,8 +1,7 @@
 import * as dotenv from "dotenv"
-import { Authorization } from "./interfaces";
 import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
-import { createDfuseClient } from "@dfuse/client";
+import { createDfuseClient, Authorization } from "@dfuse/client";
 import { JsonRpc as HyperionRpc } from "@eoscafe/hyperion";
 const { TextEncoder, TextDecoder } = require('util');
 
@@ -37,6 +36,7 @@ export const actor = process.env.ACTOR || 'blocktivity1';
 export const permission = process.env.PERMISSION || 'push';
 export const apiKey = process.env.DFUSE_TOKEN || '';
 export const network = process.env.NETWORK;
+export const COSIGN = process.env.COSIGN || '';
 
 export const signatureProvider = new JsSignatureProvider([process.env.PRIVATE_KEY]);
 export const rpc = new JsonRpc(endpoint, { fetch });
@@ -45,10 +45,13 @@ export const hyperion = new HyperionRpc(endpoint, { fetch })
 export const rpc_history = new JsonRpc(endpoint_history, { fetch });
 export const api = new Api({ rpc: rpc_contract, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 export const client = createDfuseClient({ apiKey, network })
-export const authorization: Authorization[] = [{
-  actor,
-  permission,
-}];
+export let authorization: Authorization[] = [];
+
+if (COSIGN) {
+  const [cosign_actor, cosign_permission] = COSIGN.split("@");
+  authorization.push({ actor: cosign_actor, permission: cosign_permission })
+}
+authorization.push({ actor, permission })
 
 export const ONE_HOUR = Number(process.env.ONE_HOUR || 60 * 60 * 2); // 1 hour
 export const PAUSE_MS = Number(process.env.PAUSE_MS || 60 * 1000); // 1 minute
