@@ -78,7 +78,8 @@ module.exports = {
         HISTORY_TYPE: "v1",
         NODEOS_ENDPOINT_HISTORY: "https://api.eos.miami",
         ACTOR: "blocktivity1",
-        NETWORK: "telos"
+        NETWORK: "telos",
+        VERSION: 2
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
