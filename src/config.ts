@@ -34,6 +34,7 @@ export const endpoint_history = process.env.NODEOS_ENDPOINT_HISTORY || "";
 export const endpoint_contract = process.env.NODEOS_ENDPOINT_CONTRACT || endpoint;
 export const actor = process.env.ACTOR || 'blocktivity1';
 export const permission = process.env.PERMISSION || 'push';
+export const VERSION = Number(process.env.VERSION || 1);
 export const apiKey = process.env.DFUSE_TOKEN || '';
 export const network = process.env.NETWORK;
 export const COSIGN = process.env.COSIGN || '';

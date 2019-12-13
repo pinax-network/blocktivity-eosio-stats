@@ -1,5 +1,5 @@
 import { Count, Block } from "./interfaces";
-import { rpc, ONE_HOUR, CONCURRENCY, actor } from "./config";
+import { rpc, ONE_HOUR, CONCURRENCY, actor, VERSION } from "./config";
 import { timeout } from "./utils";
 import PQueue from 'p-queue';
 import { get_transaction_count } from "./get_transaction";
@@ -51,7 +51,7 @@ export async function get_block( block_num: number ): Promise<Block> {
     const block: any = await rpc.get_block( block_num );
     return block;
   } catch (e) {
-    console.error("[ERROR] missing block", block_num);
+    console.error("[ERROR] missing block - paused 1s", block_num);
     await timeout(1000); // pause for 1s
     return get_block( block_num );
   }
@@ -74,13 +74,20 @@ export async function get_block_counts( block: Block ): Promise<Count> {
     block_counts.cpu_usage_us += cpu_usage_us;
     block_counts.net_usage_words += net_usage_words;
 
-    // full trace in block
-    if (typeof(trx) == "object") {
-      block_counts.actions += trx.transaction.actions.length;
-    // traces executed by smart contract
-    // must fetch individual transaction
+    if (VERSION == 1) {
+      // full trace in block
+      if (typeof(trx) == "object") {
+        block_counts.actions += trx.transaction.actions.length;
+      // traces executed by smart contract
+      // must fetch individual transaction
+      } else {
+        block_counts.actions += await get_transaction_count( trx );
+      }
+    } else if (VERSION == 2) {
+      // get full trace from every transaction
+      block_counts.actions += await get_transaction_count( trx.id );
     } else {
-      block_counts.actions += await get_transaction_count( trx );
+      throw new Error("VERSION is required");
     }
   }
   return block_counts;
@@ -104,3 +111,8 @@ export async function get_existing_block_nums(): Promise<Set<number>> {
 
   return new Set<number>(rows.map((i: any) => i.block_num));
 }
+
+// (async () => {
+//   const count = await get_block_counts(await get_block(62993092))
+//   console.log(count);
+// })();

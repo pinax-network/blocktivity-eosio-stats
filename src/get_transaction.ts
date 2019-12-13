@@ -17,7 +17,8 @@ export async function get_v1_actions_count( trx: string, retry = 3 ): Promise<nu
   }
   try {
     const { traces } = await rpc_history.history_get_transaction( trx );
-    return traces.length;
+    const global_sequences = new Map<number, string>();
+    return count_action_traces(traces, global_sequences);
   } catch (e) {
     return get_v1_actions_count( trx, retry - 1 )
   }
@@ -29,7 +30,7 @@ export async function get_dfuse_actions_count( trx: string, retry = 3 ): Promise
     return 0;
   }
   try {
-    const {execution_trace} = await client.fetchTransaction( trx );
+    const { execution_trace } = await client.fetchTransaction( trx );
     if (!execution_trace) return 0;
     const global_sequences = new Map<number, string>();
     return count_action_traces(execution_trace.action_traces, global_sequences);

@@ -69,6 +69,19 @@ module.exports = {
       },
       autorestart: true,
       log_date_format : "YYYY-MM-DD HH:mm"
+    },
+    {
+      name: "blocktivity-telos-stats",
+      script: 'index.ts',
+      env: {
+        NODEOS_ENDPOINT: "https://api.eos.miami",
+        HISTORY_TYPE: "v1",
+        NODEOS_ENDPOINT_HISTORY: "https://api.eos.miami",
+        ACTOR: "blocktivity1",
+        NETWORK: "telos"
+      },
+      autorestart: true,
+      log_date_format : "YYYY-MM-DD HH:mm"
     }
   ]
 };
