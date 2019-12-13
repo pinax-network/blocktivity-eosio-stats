@@ -11,12 +11,15 @@ We plan on deploying this solution/smart contracts on every EOSIO compatible blo
 
 ## Chains
 
-- [EOS](https://bloks.io/account/blocktivity1)
-- [BOS](https://bos.bloks.io/account/blocktivity1)
-- [WAX](https://wax.bloks.io/account/blocktivity1)
-- [MEETONE](https://meetone.bloks.io/account/blocktivit.m)
-- [Jungle](https://jungle.bloks.io/account/blocktivity1) (Testnet)
-- [Kylin](https://kylin.bloks.io/account/blocktivity1) (Testnet)
+| **chain** | code/scope | endpoint |
+|-----------|------------|----------|
+| [EOS](https://bloks.io/account/blocktivity1)                        | blocktivity1  | https://eos.eosn.io |
+| [BOS](https://bos.bloks.io/account/blocktivity1)                    | blocktivity1  | https://bos.eosn.io |
+| [WAX](https://wax.bloks.io/account/blocktivity1)                    | blocktivity1  | https://wax.eosn.io |
+| [MEETONE](https://meetone.bloks.io/account/blocktivit.m)            | blocktivit.m  | https://meetone.eosn.io |
+| [TELOS](https://telos.bloks.io/account/blocktivity1)                | blocktivity1  | https://api.eos.miami |
+| [Jungle](https://jungle.bloks.io/account/blocktivity1) (Testnet)    | blocktivity1  | https://jungle.eosn.io |
+| [Kylin](https://kylin.bloks.io/account/blocktivity1) (Testnet)      | blocktivity1  | https://kylin.eosn.io |
 
 ## History solution (required)
 
