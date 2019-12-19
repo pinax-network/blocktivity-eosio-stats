@@ -74,9 +74,9 @@ module.exports = {
       name: "blocktivity-telos-stats",
       script: 'index.ts',
       env: {
-        NODEOS_ENDPOINT: "https://api.eos.miami",
+        NODEOS_ENDPOINT: "http://telosapi.atticlab.net",
         HISTORY_TYPE: "v1",
-        NODEOS_ENDPOINT_HISTORY: "https://api.eos.miami",
+        NODEOS_ENDPOINT_HISTORY: "http://telosapi.atticlab.net",
         ACTOR: "blocktivity1",
         NETWORK: "telos",
         VERSION: 1
