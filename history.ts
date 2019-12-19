@@ -23,8 +23,12 @@ export async function history() {
       const hourly_counts = loads( history_block_num );
       hourly_counts.block_num = history_block_num;
 
-      await transact([ push( hourly_counts ) ]);
-      console.log(JSON.stringify({history_block_num, exists: true}));
+      try {
+        await transact([ push( hourly_counts ) ]);
+        console.log(JSON.stringify({history_block_num, exists: true}));
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 }
