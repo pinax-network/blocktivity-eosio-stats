@@ -18,6 +18,7 @@ We plan on deploying this solution/smart contracts on every EOSIO compatible blo
 | [WAX](https://wax.bloks.io/account/blocktivity1)                    | blocktivity1  | https://wax.eosn.io |
 | [MEETONE](https://meetone.bloks.io/account/blocktivit.m)            | blocktivit.m  | https://meetone.eosn.io |
 | [TELOS](https://telos.bloks.io/account/blocktivity1)                | blocktivity1  | http://telosapi.atticlab.net |
+| [BEOS](https://local.bloks.io/account/blocktivity1?nodeUrl=api.beos.world&coreSymbol=BEOS&systemDomain=eosio)                | blocktivity1  | https://api.beos.world |
 | [Jungle](https://jungle.bloks.io/account/blocktivity1) (Testnet)    | blocktivity1  | https://jungle.eosn.io |
 | [Kylin](https://kylin.bloks.io/account/blocktivity1) (Testnet)      | blocktivity1  | https://kylin.eosn.io |
 
