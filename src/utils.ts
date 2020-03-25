@@ -72,5 +72,5 @@ export async function save( block_num: number, json: Count, retry = 10): Promise
 }
 
 export function loads( block_num: number ): Count {
-  return load.sync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`));
+  return load.sync(process.cwd(), "tmp", `${network}-${block_num}.json`));
 }
