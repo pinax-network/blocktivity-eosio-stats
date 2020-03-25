@@ -46,11 +46,11 @@ export async function transact(actions: Action[]) {
 }
 
 export function exists( block_num: number ) {
-  return fs.existsSync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`));
+  return fs.existsSync(path.join(process.cwd(), "tmp", `${network}-${block_num}.json`));
 }
 
 export function save_local( block_num: number, json: Count ) {
-  write.sync(path.join(__dirname, "..", "tmp", `${network}-${block_num}.json`), json);
+  write.sync(path.join(process.cwd(), "tmp", `${network}-${block_num}.json`), json);
 }
 
 export async function save( block_num: number, json: Count, retry = 10): Promise<void> {
