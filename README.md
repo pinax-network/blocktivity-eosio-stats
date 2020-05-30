@@ -173,8 +173,8 @@ $ npm install
 # Standard Nodeos
 NODEOS_ENDPOINT="http://eos.eosn.io"
 
-# (Required) History Solution
-HISTORY_TYPE="dfuse"
+# (Required) History Solution (v1, hyperion, dfuse)
+HISTORY_TYPE="hyperion"
 NETWORK="mainnet"
 NODEOS_ENDPOINT_HISTORY="http://eos.greymass.com"
 
