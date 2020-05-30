@@ -10,24 +10,9 @@ using namespace std;
 
 const uint64_t ONE_HOUR = 7200;
 
-class [[eosio::contract("blocktivity")]] blocktivity : public contract {
+class [[eosio::contract]] blocktivity : public contract {
 public:
     using contract::contract;
-
-    /**
-     * Construct a new contract given the contract name
-     *
-     * @param {name} receiver - The name of this contract
-     * @param {name} code - The code name of the action this contract is processing.
-     * @param {datastream} ds - The datastream used
-     */
-    blocktivity( name receiver, name code, eosio::datastream<const char*> ds )
-        : contract( receiver, code, ds ),
-            _periods( get_self(), get_self().value ),
-            _sum( get_self(), get_self().value ),
-            _average( get_self(), get_self().value ),
-            _record( get_self(), get_self().value )
-    {}
 
     /**
      * ## ACTION `push`
@@ -53,15 +38,6 @@ public:
      */
     [[eosio::action]]
     void push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words );
-
-    [[eosio::action]]
-    void clean( const eosio::name table, const std::optional<eosio::name> scope );
-
-    [[eosio::action]]
-    void delperiod( const uint64_t block_num );
-
-    [[eosio::action]]
-    void updaterecord();
 
     using push_action = eosio::action_wrapper<"push"_n, &blocktivity::push>;
 
@@ -183,12 +159,6 @@ private:
     typedef eosio::singleton< "sum"_n, sum_row> sum_table;
     typedef eosio::singleton< "average"_n, average_row> average_table;
     typedef eosio::singleton< "record"_n, record_row> record_table;
-
-    // local instances of the multi indexes
-    periods_table       _periods;
-    sum_table           _sum;
-    average_table       _average;
-    record_table        _record;
 
     // private helpers
     void add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words );

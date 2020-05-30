@@ -11,6 +11,9 @@ nodeos
 stderr
 .vscode
 
+*.abi
+*.wasm
+
 # Runtime data
 pids
 *.pid

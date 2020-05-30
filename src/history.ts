@@ -1,7 +1,7 @@
 
-import { ONE_HOUR } from "./src/config";
-import { get_last_hour_block, get_hourly_counts, get_block, get_existing_block_nums } from "./src/get_hourly_counts";
-import { exists, save, push, transact, loads } from "./src/utils";
+import { ONE_HOUR } from "./config";
+import { get_last_hour_block, get_hourly_counts, get_block, get_existing_block_nums } from "./get_hourly_counts";
+import { exists, save, push, transact, loads } from "./utils";
 
 export async function history() {
   const block_num = await get_last_hour_block();
@@ -12,7 +12,7 @@ export async function history() {
     const history_block_num = block_num - i * ONE_HOUR;
 
     if (block_nums.has(history_block_num)) {
-      console.log("SKIPP", history_block_num);
+      console.log("SKIP", history_block_num);
       continue;
     }
 

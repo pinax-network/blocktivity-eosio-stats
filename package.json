@@ -6,14 +6,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node index.ts",
-    "history": "ts-node history.ts",
-    "restart": "npm run compile && npm run deploy && npm run test",
-    "deploy": "./scripts/deploy.sh",
-    "compile": "./scripts/compile.sh",
-    "test": "./scripts/test.sh",
-    "nodeos:start": "./scripts/start_nodeos.sh",
-    "nodeos:kill": "./scripts/kill_nodeos.sh"
+    "start": "ts-node src/index.ts",
+    "history": "ts-node src/history.ts"
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {

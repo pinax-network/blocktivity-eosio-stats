@@ -1,5 +1,6 @@
 #include "blocktivity.hpp"
 
+[[eosio::action]]
 void blocktivity::push( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words )
 {
     require_auth( get_self() );
@@ -10,6 +11,7 @@ void blocktivity::push( const uint64_t block_num, const eosio::time_point_sec ti
 
 void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_sec timestamp, const uint64_t transactions, const uint64_t actions, const uint64_t cpu_usage_us, const uint64_t net_usage_words )
 {
+    periods_table _periods( get_self(), get_self().value );
     check( block_num % ONE_HOUR == 0, "[block_num] must be a modulo of " + to_string(ONE_HOUR));
     check( _periods.find( block_num * -1 ) == _periods.end(), "[block_num] already exists" );
 
@@ -25,6 +27,12 @@ void blocktivity::add_hour( const uint64_t block_num, const eosio::time_point_se
 
 void blocktivity::calculate_periods( const uint64_t block_num )
 {
+    // tables
+    average_table _average( get_self(), get_self().value );
+    record_table _record( get_self(), get_self().value );
+    sum_table _sum( get_self(), get_self().value );
+    periods_table _periods( get_self(), get_self().value );
+
     // sum stats
     auto sum = _sum.get_or_default();
     auto average = _average.get_or_default();
@@ -87,65 +95,4 @@ void blocktivity::calculate_periods( const uint64_t block_num )
     if (previous_record.hour != record.hour || previous_record.day != record.day || previous_record.week != record.week) {
         _record.set( record, get_self() );
     }
-}
-
-void blocktivity::clean( const eosio::name table, const std::optional<eosio::name> scope )
-{
-    require_auth( get_self() );
-
-    // periods
-    if (table == "periods"_n) {
-        auto periods_itr = _periods.begin();
-        while ( periods_itr != _periods.end() ) {
-            periods_itr = _periods.erase(periods_itr);
-        }
-    }
-    if (table == "sum"_n) _sum.remove();
-    if (table == "average"_n) _average.remove();
-    if (table == "record"_n) _record.remove();
-}
-
-void blocktivity::delperiod( const uint64_t block_num )
-{
-    require_auth( get_self() );
-
-    auto periods_itr = _periods.find( block_num * -1 );
-    check( periods_itr != _periods.end(), "[block_num] does not exist");
-    _periods.erase( periods_itr );
-}
-
-void blocktivity::updaterecord()
-{
-    require_auth( get_self() );
-
-    auto record = _record.get_or_default();
-    record.last_updated = current_time_point();
-
-    // counters
-    uint64_t actions = 0;
-    int count = 0;
-
-    // iterate over each 1 hour period
-    auto itr = _periods.begin();
-    while ( itr != _periods.end() ) {
-        // sum actions
-        actions += itr->actions;
-        count += 1;
-
-        // last 1 hour
-        if (itr->actions > record.hour) record.hour = itr->actions;
-
-        // 1 day rolling average
-        if (count >= 24) {
-            uint64_t average_action = actions * 24 / count;
-            if (average_action > record.day) record.day = average_action;
-        }
-        // 7 days record
-        if (count == 168) {
-            if (actions > record.week) record.week = actions;
-        }
-        if ( itr != _periods.end()) itr++;
-    }
-
-    _record.set( record, get_self() );
 }

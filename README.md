@@ -28,6 +28,12 @@ We plan on deploying this solution/smart contracts on every EOSIO compatible blo
 - [EOSIO v1 History](https://developers.eos.io/eosio-nodeos/reference)
 - [Hyperion](https://github.com/eosrio/Hyperion-History-API)
 
+## Build - EOSIO smart contract
+
+```bash
+$ eosio-cpp blocktivity.cpp
+```
+
 ### Examples - NodeJS/Javascript
 
 **install**
@@ -50,10 +56,14 @@ const table = "sum";
 
 rpc.get_table_rows({ json: true, code, scope, table }).then((data => {
   console.log(data.rows[0]);
-  // { hour: 815997,
-  // day: 20310523,
-  // week: 128191484,
-  // last_updated: '2019-11-06T15:48:24' }
+  /**
+   * {
+   *   hour: 815997,
+   *   day: 20310523,
+   *   week: 128191484,
+   *   last_updated: '2019-11-06T15:48:24'
+   * }
+   */
 }))
 ```
 
@@ -74,12 +84,16 @@ rpc.get_table_rows({ json: true, code, scope, table, limit }).then((data => {
 
   for (const row of data.rows) {
     console.log(row);
-    // { block_num: 88228800,
-    //   timestamp: '2019-11-05T02:35:49',
-    //   transactions: 178877,
-    //   actions: 826073,
-    //   cpu_usage_us: 316587911,
-    //   net_usage_words: 8364304 }
+    /**
+     * {
+     *   block_num: 88228800,
+     *   timestamp: '2019-11-05T02:35:49',
+     *   transactions: 178877,
+     *   actions: 826073,
+     *   cpu_usage_us: 316587911,
+     *   net_usage_words: 8364304
+     * }
+     */
   }
 }))
 ```
@@ -146,8 +160,8 @@ curl --request POST \
 ## Install
 
 ```bash
-$ git clone https://github.com/EOS-Nation/blocktivity-eos-stats.git
-$ cd blocktivity-eos-stats
+$ git clone https://github.com/EOS-Nation/blocktivity-eosio-stats.git
+$ cd blocktivity-eosio-stats
 $ npm install
 ```
 
@@ -165,13 +179,13 @@ NETWORK="mainnet"
 NODEOS_ENDPOINT_HISTORY="http://eos.greymass.com"
 
 # (Optional) Push results to on-chain contract
-NODEOS_ENDPOINT_CONTRACT="http://localhost:8888"
 ACTOR="blocktivity1"
 PERMISSION="push"
+COSIGN="cpu.account@active"
 
 # (Private) keys & tokens
 DFUSE_TOKEN="<PRIVATE DFUSE TOKEN>"
-PRIVATE_KEY="<PRIVATE KEY>"
+PRIVATE_KEYS="<PRIVATE KEY>"
 
 # (Optional) server-side settings
 ONE_HOUR=7200

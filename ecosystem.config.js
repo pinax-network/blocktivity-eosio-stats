@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "blocktivity-eos-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://eos.eosn.io",
         HISTORY_TYPE: "dfuse",
@@ -14,7 +14,7 @@ module.exports = {
     },
     {
       name: "blocktivity-jungle-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://jungle.eosn.io",
         HISTORY_TYPE: "dfuse",
@@ -25,7 +25,7 @@ module.exports = {
     },
     {
       name: "blocktivity-kylin-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://kylin.eosn.io",
         HISTORY_TYPE: "dfuse",
@@ -36,7 +36,7 @@ module.exports = {
     },
     {
       name: "blocktivity-bos-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://bos.eosn.io",
         HISTORY_TYPE: "v1",
@@ -48,7 +48,7 @@ module.exports = {
     },
     {
       name: "blocktivity-wax-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://wax.eosn.io",
         HISTORY_TYPE: "dfuse",
@@ -59,7 +59,7 @@ module.exports = {
     },
     {
       name: "blocktivity-meetone-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://meetone.eosn.io",
         HISTORY_TYPE: "v1",
@@ -72,7 +72,7 @@ module.exports = {
     },
     {
       name: "blocktivity-telos-stats",
-      script: 'index.ts',
+      script: 'src/index.ts',
       env: {
         NODEOS_ENDPOINT: "http://telosapi.atticlab.net",
         HISTORY_TYPE: "v1",

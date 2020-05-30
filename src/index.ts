@@ -1,6 +1,6 @@
-import { PAUSE_MS } from "./src/config";
-import { get_last_hour_block, get_hourly_counts, get_block } from "./src/get_hourly_counts";
-import { timeout, exists, save } from "./src/utils";
+import { PAUSE_MS } from "./config";
+import { get_last_hour_block, get_hourly_counts, get_block } from "./get_hourly_counts";
+import { timeout, exists, save } from "./utils";
 import { history } from "./history";
 
 async function main() {
