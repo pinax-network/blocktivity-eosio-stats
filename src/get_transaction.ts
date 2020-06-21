@@ -69,8 +69,3 @@ export async function get_hyperion_actions_count( trx: string, retry = 3 ): Prom
     return get_hyperion_actions_count( trx, retry - 1 )
   }
 }
-
-(async () => {
-  const count = await get_dfuse_actions_count("4cf4798a2d90a6e0faf0d0cd0e74013c962c35eadc71fffa2246576f01607fa0")
-  console.log(count);
-})();
