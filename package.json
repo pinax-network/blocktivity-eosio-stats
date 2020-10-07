@@ -11,13 +11,11 @@
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {
-    "@dfuse/client": "^0.3.0",
-    "@eoscafe/hyperion": "^3.2.4",
     "dotenv": "^8.2.0",
-    "eosjs": "^20.0.0",
+    "eosjs": "^20.0.3",
     "load-json-file": "^6.2.0",
     "moment": "^2.24.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "p-queue": "^6.2.0",
     "write-json-file": "^4.2.0",
     "ws": "^7.2.0"
@@ -26,6 +24,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/moment": "^2.13.0",
     "@types/node": "^12.11.7",
+    "@types/node-fetch": "^2.5.7",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4"
   }

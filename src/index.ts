@@ -1,5 +1,6 @@
 import { PAUSE_MS } from "./config";
-import { get_last_hour_block, get_hourly_counts, get_block } from "./get_hourly_counts";
+import { get_last_hour_block, get_hourly_counts } from "./get_hourly_counts";
+import { get_block } from "./trace_api";
 import { timeout, exists, save } from "./utils";
 import { history } from "./history";
 
