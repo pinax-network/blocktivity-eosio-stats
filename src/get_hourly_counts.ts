@@ -3,7 +3,6 @@ import PQueue from 'p-queue';
 import { Count, Block } from "./interfaces";
 import { rpc, ONE_HOUR, CONCURRENCY, actor } from "./config";
 import { parseTimestamp, timeout } from "./utils";
-// import { get_transaction_count } from "./get_transaction";
 import { get_block } from "./trace_api";
 
 // global timer
@@ -48,17 +47,6 @@ export async function get_hourly_counts( block: Block ) {
   return hourly_counts;
 }
 
-// export async function get_block( block_num: number ): Promise<Block> {
-//   try {
-//     const block: any = await rpc.get_block( block_num );
-//     return block;
-//   } catch (e) {
-//     console.error("[ERROR] missing block - paused 1s", block_num);
-//     await timeout(1000); // pause for 1s
-//     return get_block( block_num );
-//   }
-// }
-
 export function get_block_counts( block: Block ): Count {
   // store statistic counters
   const block_counts: Count = {
@@ -76,23 +64,6 @@ export function get_block_counts( block: Block ): Count {
     block_counts.cpu_usage_us += cpu_usage_us;
     block_counts.net_usage_words += net_usage_words;
     block_counts.actions += actions.length;
-
-    // if (VERSION == 1) {
-    //   // full trace in block
-    //   if (typeof(trx) == "object") {
-    //     block_counts.actions += trx.transaction.actions.length;
-    //   // traces executed by smart contract
-    //   // must fetch individual transaction
-    //   } else {
-    //     block_counts.actions += await get_transaction_count( trx );
-    //   }
-    // } else if (VERSION == 2) {
-    //   // get full trace from every transaction
-
-    // } else {
-    //   throw new Error("VERSION is required");
-    // }
-
   }
   return block_counts;
 }
@@ -115,8 +86,3 @@ export async function get_existing_block_nums(): Promise<Set<number>> {
 
   return new Set<number>(rows.map((i: any) => i.block_num));
 }
-
-// (async () => {
-//   const count = await get_block_counts(await get_block(62993092))
-//   console.log(count);
-// })();

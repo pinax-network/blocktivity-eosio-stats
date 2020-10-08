@@ -25,9 +25,8 @@ export const network = process.env.NETWORK;
 export const COSIGN = process.env.COSIGN || '';
 
 export const signatureProvider = new JsSignatureProvider((process.env.PRIVATE_KEYS || "").split(","));
-export const rpc_trace_api = new JsonRpc(endpoint_trace_api, { fetch });
-export const rpc_transaction = new JsonRpc(endpoint_transaction, { fetch });
-export const api = new Api({ rpc: rpc_transaction, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+export const rpc = new JsonRpc(endpoint_trace_api, { fetch });
+export const api = new Api({ rpc: new JsonRpc(endpoint_transaction, { fetch }), signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 export let authorization: Authorization[] = [];
 
 if (COSIGN) {
