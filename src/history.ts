@@ -32,7 +32,6 @@ export async function history() {
       }
     }
   }
-  console.log(count);
 }
 
 (async () => {
