@@ -2,7 +2,7 @@ import moment from "moment";
 import PQueue from 'p-queue';
 import { Count, Block } from "./interfaces";
 import { rpc, ONE_HOUR, CONCURRENCY, actor } from "./config";
-import { timeout } from "./utils";
+import { parseTimestamp, timeout } from "./utils";
 // import { get_transaction_count } from "./get_transaction";
 import { get_block } from "./trace_api";
 
@@ -15,7 +15,7 @@ export async function get_hourly_counts( block: Block ) {
 
   const hourly_counts: Count = {
     block_num: block.number,
-    timestamp: block.timestamp,
+    timestamp: parseTimestamp(block.timestamp),
     actions: 0,
     transactions: 0,
     cpu_usage_us: 0,
@@ -63,7 +63,7 @@ export function get_block_counts( block: Block ): Count {
   // store statistic counters
   const block_counts: Count = {
     block_num: block.number,
-    timestamp: block.timestamp,
+    timestamp: parseTimestamp(block.timestamp),
     actions: 0,
     transactions: 0,
     cpu_usage_us: 0,

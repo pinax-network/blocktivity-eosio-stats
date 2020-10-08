@@ -15,6 +15,10 @@ export function timeout(ms: number) {
   })
 }
 
+export function parseTimestamp( timestamp: string ) {
+  return timestamp.split(".")[0];
+}
+
 export function push( data: Count ): Action {
   return {
     account: actor,
