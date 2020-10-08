@@ -104,8 +104,8 @@ export async function get_last_hour_block(): Promise<number> {
     // minus 1 hour & round down to the nearest 1 hour interval
     return (last_irreversible_block_num - ONE_HOUR) - last_irreversible_block_num % ONE_HOUR;
   } catch (e) {
-    console.error("[ERROR] get info");
-    timeout(5 * 1000) // pause for 5s
+    console.error("[ERROR] ❗️ get info");
+    await timeout(5000) // pause for 5s
   }
   return get_last_hour_block();
 }
