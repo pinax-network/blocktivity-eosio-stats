@@ -17,6 +17,6 @@ export async function get_block( block_num?: number ): Promise<Block> {
     }
 }
 
-(async () => {
-    console.log(await get_block(39381711));
-})()
+// (async () => {
+//     console.log(await get_block(39381711));
+// })()
