@@ -10,6 +10,7 @@ dist
 nodeos
 stderr
 .vscode
+*.js
 
 *.abi
 *.wasm

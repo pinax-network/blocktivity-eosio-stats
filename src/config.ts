@@ -3,13 +3,13 @@ import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 import { Authorization } from "eosjs/dist/eosjs-serialize";
 const { TextEncoder, TextDecoder } = require('util');
+const fetch: any = require('node-fetch');
 
-;(global as any).fetch = require("node-fetch")
+;(global as any).fetch = fetch
 ;(global as any).WebSocket = require("ws")
 
 dotenv.config();
 
-const fetch = require('node-fetch');
 
 if (!process.env.NODEOS_ENDPOINT_TRACE_API) throw new Error("[NODEOS_ENDPOINT_TRACE_API] is required");
 if (!process.env.PRIVATE_KEYS) throw new Error("[PRIVATE_KEYS] is required");

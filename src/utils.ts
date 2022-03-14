@@ -10,7 +10,7 @@ import { Action } from "eosjs/dist/eosjs-serialize";
 export function timeout(ms: number) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      return resolve();
+      return resolve(true);
     }, ms);
   })
 }
@@ -68,7 +68,7 @@ export async function save( block_num: number, json: Count, retry = 10): Promise
   // push on-chain
   try {
     await transact([ push(json) ])
-  } catch (e) {
+  } catch (e: any) {
     console.error(JSON.stringify({error: "save", message: e.message}));
     await timeout(5000) // 5 sec pause
     return save( block_num, json, retry - 1);
