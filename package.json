@@ -14,7 +14,7 @@
     "dotenv": "^8.2.0",
     "eosjs": "^20.0.3",
     "load-json-file": "^6.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-fetch": "^2.6.1",
     "p-queue": "^6.2.0",
     "write-json-file": "^4.2.0",
