@@ -1,49 +1,70 @@
 import moment from "moment";
-import PQueue from 'p-queue';
+// import PQueue from 'p-queue';
 import { Count, Block } from "./interfaces";
-import { rpc, ONE_HOUR, CONCURRENCY, actor } from "./config";
+import { rpc, ONE_HOUR, actor } from "./config";
 import { parseTimestamp, timeout } from "./utils";
-import { get_block } from "./trace_api";
+import { streamBlocks } from "./dfuse"
+// import { get_block } from "./trace_api";
 
 // global timer
 let before = moment.utc(moment.now()).unix();
 
-export async function get_hourly_counts( block: Block ) {
-  const start_block = block.number;
+export async function get_hourly_counts( rawBlock: any ) {
+  const start_block_num = rawBlock.block_num;
+  const stop_block_num = start_block_num + ONE_HOUR;
   before = moment.utc(moment.now()).unix();
 
   const hourly_counts: Count = {
-    block_num: block.number,
-    timestamp: parseTimestamp(block.timestamp),
+    block_num: rawBlock.block_num,
+    timestamp: parseTimestamp(rawBlock.timestamp),
     actions: 0,
     transactions: 0,
     cpu_usage_us: 0,
     net_usage_words: 0,
   }
-  // queue up promises
-  const queue = new PQueue({concurrency: CONCURRENCY});
 
-  for (let i = start_block; i < start_block + ONE_HOUR; i++) {
-    queue.add(async () => {
-      const block = await get_block(i);
-      const block_counts = get_block_counts( block )
-      hourly_counts.actions += block_counts.actions;
-      hourly_counts.transactions += block_counts.transactions;
-      hourly_counts.cpu_usage_us += block_counts.cpu_usage_us;
-      hourly_counts.net_usage_words += block_counts.net_usage_words;
+  function callback(block: any) {
+    const block_num = block.number;
+    const timestamp = Number(block.header.timestamp.seconds);
+    const actions = block.filteredExecutedTotalActionCount;
+    const transactions = block.filteredTransactionCount;
 
-      // logging
-      const after = moment.utc(moment.now()).unix();
-      console.log(JSON.stringify({time: after - before, start_block, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
-    });
+    hourly_counts.actions += actions;
+    hourly_counts.transactions += transactions;
+
+    // logging
+    const after = moment.utc(moment.now()).unix();
+    // console.log(JSON.stringify({time: after - before, start_block_num, delta_num: ONE_HOUR - i % ONE_HOUR}));
+    console.log(JSON.stringify({time: after - before, timestamp, remaining: stop_block_num - block_num, block_num, actions, transactions}))
   }
 
-  // wait until queue is finished
-  await queue.onIdle();
+  await streamBlocks(start_block_num, stop_block_num, callback );
+
+
+  // // queue up promises
+  // const queue = new PQueue({concurrency: CONCURRENCY});
+
+  // for (let i = start_block; i < start_block + ONE_HOUR; i++) {
+  //   queue.add(async () => {
+  //     const block = await get_block(i);
+  //     const block_counts = get_block_counts( block )
+  //     hourly_counts.actions += block_counts.actions;
+  //     hourly_counts.transactions += block_counts.transactions;
+  //     hourly_counts.cpu_usage_us += block_counts.cpu_usage_us;
+  //     hourly_counts.net_usage_words += block_counts.net_usage_words;
+
+  //     // logging
+  //     const after = moment.utc(moment.now()).unix();
+  //     console.log(JSON.stringify({time: after - before, start_block, delta_num: ONE_HOUR - i % ONE_HOUR, block_counts}));
+  //   });
+  // }
+
+  // // wait until queue is finished
+  // await queue.onIdle();
 
   // logging
   const after = moment.utc(moment.now()).unix();
-  console.log(JSON.stringify({time: after - before, start_block, hourly_counts}));
+  console.log(JSON.stringify({time: after - before, start_block_num, hourly_counts}));
   return hourly_counts;
 }
 

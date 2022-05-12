@@ -68,8 +68,8 @@ export async function save( block_num: number, json: Count, retry = 10): Promise
   // push on-chain
   try {
     await transact([ push(json) ])
-  } catch (e: any) {
-    console.error(JSON.stringify({error: "save", message: e.message}));
+  } catch (e) {
+    console.error(JSON.stringify({error: "save", message: e}));
     await timeout(5000) // 5 sec pause
     return save( block_num, json, retry - 1);
   }
