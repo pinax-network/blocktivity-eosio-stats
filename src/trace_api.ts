@@ -1,5 +1,5 @@
 import fetch from "node-fetch"
-import { endpoint_trace_api } from "./config";
+import { endpoint } from "./config";
 import { Block } from "./interfaces";
 import { timeout } from "./utils";
 
@@ -22,8 +22,8 @@ export async function get_block( block_num?: number, retry = 3 ): Promise<Block>
         process.exit();
     }
     try {
-        const params = {method: "POST", body: JSON.stringify({block_num}) };
-        const response = await fetch(endpoint_trace_api + "/v1/trace_api/get_block", params);
+        const params = {method: "POST", body: JSON.stringify({block_num_or_id: block_num }) };
+        const response = await fetch(endpoint + "/v1/chain/get_block", params);
         const block: any = await response.json();
         if ( block.error ) {
             console.error(`[ERROR] ❗️ trace API error [${block_num}] -`, block.message);

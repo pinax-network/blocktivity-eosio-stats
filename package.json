@@ -11,14 +11,18 @@
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "dependencies": {
+    "@dfuse/client": "^0.3.21",
+    "@grpc/proto-loader": "^0.6.12",
     "dotenv": "^8.2.0",
     "eosjs": "^20.0.3",
+    "grpc": "^1.24.11",
     "load-json-file": "^6.2.0",
     "moment": "^2.29.2",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "2.x",
     "p-queue": "^6.2.0",
+    "protobufjs": "^6.11.2",
     "write-json-file": "^4.2.0",
-    "ws": "^7.2.0"
+    "ws": "^8.6.0"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
