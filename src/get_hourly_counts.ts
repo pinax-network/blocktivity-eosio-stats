@@ -1,9 +1,11 @@
 import moment from "moment";
 // import PQueue from 'p-queue';
-import { Count, Block } from "./interfaces";
+import { Count } from "./interfaces";
 import { rpc, ONE_HOUR, actor } from "./config";
 import { parseTimestamp, timeout } from "./utils";
 import { streamBlocks } from "./dfuse"
+import fs from "fs";
+import { Block } from "./firehose"
 // import { get_block } from "./trace_api";
 
 // global timer
@@ -23,19 +25,30 @@ export async function get_hourly_counts( rawBlock: any ) {
     net_usage_words: 0,
   }
 
-  function callback(block: any) {
+  function callback(block: Block) {
     const block_num = block.number;
     const timestamp = Number(block.header.timestamp.seconds);
     const actions = block.filteredExecutedTotalActionCount;
     const transactions = block.filteredTransactionCount;
+    const producer = block.header.producer;
 
     hourly_counts.actions += actions;
     hourly_counts.transactions += transactions;
 
+    let push = false;
+    for ( const trace of block.filteredTransactionTraces ) {
+      if ( push ) break;
+      for ( const action of trace.actionTraces ) {
+        if ( action.receipt.receiver == "push.sx") push = true; break;
+      }
+    }
+
+    // fs.writeFileSync("filteredTransactionTraces.json", JSON.stringify(block.filteredTransactionTraces, null, 4));
+    // process.exit()
+
     // logging
     const after = moment.utc(moment.now()).unix();
-    // console.log(JSON.stringify({time: after - before, start_block_num, delta_num: ONE_HOUR - i % ONE_HOUR}));
-    console.log(JSON.stringify({time: after - before, timestamp, remaining: stop_block_num - block_num, block_num, actions, transactions}))
+    console.log(JSON.stringify({push, producer, time: after - before, timestamp, remaining: stop_block_num - block_num, block_num, actions, transactions}))
   }
 
   await streamBlocks(start_block_num, stop_block_num, callback );
@@ -68,26 +81,26 @@ export async function get_hourly_counts( rawBlock: any ) {
   return hourly_counts;
 }
 
-export function get_block_counts( block: Block ): Count {
-  // store statistic counters
-  const block_counts: Count = {
-    block_num: block.number,
-    timestamp: parseTimestamp(block.timestamp),
-    actions: 0,
-    transactions: 0,
-    cpu_usage_us: 0,
-    net_usage_words: 0,
-  }
+// export function get_block_counts( block: Block ): Count {
+//   // store statistic counters
+//   const block_counts: Count = {
+//     block_num: block.number,
+//     timestamp: parseTimestamp(block.timestamp),
+//     actions: 0,
+//     transactions: 0,
+//     cpu_usage_us: 0,
+//     net_usage_words: 0,
+//   }
 
-  // count each transaction
-  for ( const { cpu_usage_us, net_usage_words, actions } of block.transactions ) {
-    block_counts.transactions += 1;
-    block_counts.cpu_usage_us += cpu_usage_us;
-    block_counts.net_usage_words += net_usage_words;
-    block_counts.actions += actions.length;
-  }
-  return block_counts;
-}
+//   // count each transaction
+//   for ( const { cpu_usage_us, net_usage_words, actions } of block.transactions ) {
+//     block_counts.transactions += 1;
+//     block_counts.cpu_usage_us += cpu_usage_us;
+//     block_counts.net_usage_words += net_usage_words;
+//     block_counts.actions += actions.length;
+//   }
+//   return block_counts;
+// }
 
 export async function get_last_hour_block(): Promise<number> {
   try {
