@@ -20,7 +20,7 @@
     "moment": "^2.29.2",
     "node-fetch": "2.x",
     "p-queue": "^6.2.0",
-    "protobufjs": "^6.11.2",
+    "protobufjs": "^7.2.4",
     "write-json-file": "^4.2.0",
     "ws": "^8.6.0"
   },
